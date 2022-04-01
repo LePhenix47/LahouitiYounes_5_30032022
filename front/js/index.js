@@ -46,15 +46,15 @@ fetch("http://localhost:3000/api/products")
     try{
       const urlProductsAPI = "http://localhost:3000/api/products"; //On ajoute l'URL dans une constante
       let response = await fetch(urlProductsAPI); //On attend la réponse du fetch pour savoir si le statut du code est 200
-      let sofaProductsList = await response.json(); //On crée la variable sofaProductList qui va contenir le tableau d'objet de l'API au format JSON → Liste de nos produits
+      let couchProductsList = await response.json(); //On crée la variable couchProductList qui va contenir le tableau d'objet de l'API au format JSON → Liste de nos produits
 
-      for(sofaProduct of sofaProductsList){ //On fait une boucle pour parcourir le tableau
+      for(couchProduct of couchProductsList){ //On fait une boucle pour parcourir le tableau
         itemsSection.innerHTML += ` 
-        <a href="./product.html?id=${sofaProduct._id}">
+        <a href="./product.html?id=${couchProduct._id}">
         <article>
-          <img src="${sofaProduct.imageUrl}" alt="${sofaProduct.altTxt}">
-          <h3 class="productName">${sofaProduct.name}</h3>
-          <p class="productDescription">${sofaProduct.description}</p>
+          <img src="${couchProduct.imageUrl}" alt="${couchProduct.altTxt}">
+          <h3 class="productName">${couchProduct.name}</h3>
+          <p class="productDescription">${couchProduct.description}</p>
         </article>
       </a>
         `;
@@ -62,7 +62,8 @@ fetch("http://localhost:3000/api/products")
       }
 
     }catch(error){
-      console.error("ERREUR TROUVEE= " + error);
+      console.log('%c↓ Attention erreur dans la fonction products() '+ error + ' ↓', 'background-color: crimson;');
+      console.error(error);
     }
   }
 

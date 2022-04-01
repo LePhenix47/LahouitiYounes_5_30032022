@@ -37,6 +37,8 @@ let itemDescription = document.getElementById("description");
 
 let itemColors = document.getElementById("colors");
 
+
+
 const urlProductsAPI = "http://localhost:3000/api/products";
 
 //Cette fonction permet de nous retourner les paramètres d'une URL
@@ -46,11 +48,11 @@ function getParameter(parameterName) {
     parameters.has(parameterName) //Switch case au cas où le paramètre est trouvé
   ) {
     case true:
-      return parameters.get(parameterName); //Retourne la VALEUR du paramètre de l'URL
+      return parameters.get(parameterName); //Retourne la VALEUR du paramètre qu'on a mis
       break;
 
     case false:
-      console.log(parameterName + " n'a pas été trouvé dans l'URL de la page!");
+      console.error(parameterName + " n'a pas été trouvé dans l'URL de la page!");
       break;
     default:
       false;
@@ -60,20 +62,22 @@ function getParameter(parameterName) {
 async function showProductDetails() {
   try {
     let response = await fetch(urlProductsAPI);
-    let sofaProductsList = await response.json();
-    console.log(sofaProductsList);
+    let couchProductsList = await response.json();
+    
+    console.table(couchProductsList);
+    console.table([couchProductsList]);
 
-    console.log(getParameter("id"));
+   // console.log(getParameter("id"));
 
-    for (sofaProduct of sofaProductsList) {
-      if (getParameter("id") === sofaProduct._id) {
+    for (couchProduct of couchProductsList) {
+      if (getParameter("id") === couchProduct._id) {
         itemImage.innerHTML = `
-        <img src="${sofaProduct.imageUrl}" alt="${sofaProduct.altTxt}">
+        <img src="${couchProduct.imageUrl}" alt="${couchProduct.altTxt}">
                 `;
-        itemTitle.textContent = sofaProduct.name;
-        itemPrice.textContent = sofaProduct.price;
-        itemDescription.textContent = sofaProduct.description;
-        for (color of sofaProduct.colors) {
+        itemTitle.textContent = couchProduct.name;
+        itemPrice.textContent = couchProduct.price;
+        itemDescription.textContent = couchProduct.description;
+        for (color of couchProduct.colors) {
           itemColors.innerHTML += `
           <option value="${color}">${color}</option>
           `;
@@ -86,3 +90,5 @@ async function showProductDetails() {
 }
 
 showProductDetails();
+
+
