@@ -37,47 +37,36 @@ let itemDescription = document.getElementById("description");
 
 let itemColors = document.getElementById("colors");
 
-
-
 const urlProductsAPI = "http://localhost:3000/api/products";
 
 //Cette fonction permet de nous retourner les paramètres d'une URL
 function getParameter(parameterName) {
   let parameters = new URLSearchParams(window.location.search);
-  switch (
-    parameters.has(parameterName) //Switch case au cas où le paramètre est trouvé
-  ) {
-    case true:
-      return parameters.get(parameterName); //Retourne la VALEUR du paramètre qu'on a mis
-      break;
-
-    case false:
-      console.error(parameterName + " n'a pas été trouvé dans l'URL de la page!");
-      break;
-    default:
-      false;
-  }
+  return parameters.get(parameterName); //Retourne la VALEUR du paramètre qu'on a mis
 }
 
 async function showProductDetails() {
   try {
     let response = await fetch(urlProductsAPI);
     let couchProductsList = await response.json();
-    
-    console.table(couchProductsList);
-    console.table([couchProductsList]);
 
-   // console.log(getParameter("id"));
+    console.table(couchProductsList);
+    let productId = getParameter("id");
+    console.log("ID du produit: "+productId);
 
     for (couchProduct of couchProductsList) {
-      if (getParameter("id") === couchProduct._id) {
+      //On déclare les propriétés de l'objet couchProduct entre accolades pour éviter les répétitions
+      const { imageUrl, altTxt, _id, colors, name, price, description } =
+        couchProduct;
+     
+      if (productId == _id) {
         itemImage.innerHTML = `
-        <img src="${couchProduct.imageUrl}" alt="${couchProduct.altTxt}">
+        <img src="${imageUrl}" alt="${altTxt}">
                 `;
-        itemTitle.textContent = couchProduct.name;
-        itemPrice.textContent = couchProduct.price;
-        itemDescription.textContent = couchProduct.description;
-        for (color of couchProduct.colors) {
+        itemTitle.textContent = name;
+        itemPrice.textContent = price;
+        itemDescription.textContent = description;
+        for (color of colors) {
           itemColors.innerHTML += `
           <option value="${color}">${color}</option>
           `;
@@ -85,10 +74,15 @@ async function showProductDetails() {
       }
     }
   } catch (error) {
+    console.log(
+      "%c↓ Attention erreur dans la fonction showProductDetails() de product.js " +
+        error +
+        " ↓",
+      "background-color: crimson;"
+    );
     console.error(error);
   }
 }
 
+
 showProductDetails();
-
-
