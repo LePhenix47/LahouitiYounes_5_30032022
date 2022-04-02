@@ -40,12 +40,20 @@ console.log("Hello world");
 
 let itemsSection = document.getElementById("items");
 
-//La fonction products permet d'afficher dynamiquement les produits à notre page d'accueil
+//
+
+
+/*
+La fonction products permet d'afficher dynamiquement les produits à notre page d'accueil
+On ajoute l'URL dans une constante
+On attend la réponse du fetch pour savoir si le statut du code est 200
+n crée la variable couchProductList qui va contenir le tableau d'objet de l'API au format JSON → Liste de nos produits
+*/
 async function products() {
   try {
-    const urlProductsAPI = "http://localhost:3000/api/products"; //On ajoute l'URL dans une constante
-    let response = await fetch(urlProductsAPI); //On attend la réponse du fetch pour savoir si le statut du code est 200
-    let couchProductsList = await response.json(); //On crée la variable couchProductList qui va contenir le tableau d'objet de l'API au format JSON → Liste de nos produits
+    const urlProductsAPI = "http://localhost:3000/api/products"; //
+    let response = await fetch(urlProductsAPI); //
+    let couchProductsList = await response.json(); //
 
     for (couchProduct of couchProductsList) {
       const { _id, imageUrl, altTxt, name, description } = couchProduct;
