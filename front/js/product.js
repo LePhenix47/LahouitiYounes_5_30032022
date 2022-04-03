@@ -37,42 +37,42 @@ let itemDescription = document.getElementById("description");
 
 let itemColors = document.getElementById("colors");
 
-const urlProductsAPI = "http://localhost:3000/api/products";
+const urlProductsAPI = "http://localhost:3000/api/products/";
 
-//Cette fonction permet de nous retourner les paramètres d'une URL
+//Cette fonction permet de nous retourner la valeur du paramètre dans l'URL
 function getParameter(parameterName) {
   let parameters = new URLSearchParams(window.location.search);
-  return parameters.get(parameterName); //Retourne la VALEUR du paramètre qu'on a mis
+  return parameters.get(parameterName);
 }
 
+/*
+Cette fonction nous permet d'afficher le produit grâce à son ID
+    
+*/
 async function showProductDetails() {
   try {
-    let response = await fetch(urlProductsAPI);
-    let couchProductsList = await response.json();
-
-    console.table(couchProductsList);
     let productId = getParameter("id");
-    console.log("ID du produit: "+productId);
 
-    for (couchProduct of couchProductsList) {
-      //On déclare les propriétés de l'objet couchProduct entre accolades pour éviter les répétitions
-      const { imageUrl, altTxt, _id, colors, name, price, description } =
-        couchProduct;
-     
-      if (productId == _id) {
-        itemImage.innerHTML = `
+    let response = await fetch(urlProductsAPI + productId);
+    let couchProduct = await response.json();
+
+    console.log("ID du produit: " + productId);
+    console.log(urlProductsAPI + productId);
+
+    const { imageUrl, altTxt, colors, name, price, description } = couchProduct;
+
+    itemImage.innerHTML = `
         <img src="${imageUrl}" alt="${altTxt}">
                 `;
-        itemTitle.textContent = name;
-        itemPrice.textContent = price;
-        itemDescription.textContent = description;
-        for (color of colors) {
-          itemColors.innerHTML += `
+    itemTitle.textContent = name;
+    itemPrice.textContent = price;
+    itemDescription.textContent = description;
+    for (color of colors) {
+      itemColors.innerHTML += `
           <option value="${color}">${color}</option>
           `;
-        }
-      }
     }
+    return productId;
   } catch (error) {
     console.log(
       "%c↓ Attention erreur dans la fonction showProductDetails() de product.js " +
@@ -83,6 +83,5 @@ async function showProductDetails() {
     console.error(error);
   }
 }
-
 
 showProductDetails();
