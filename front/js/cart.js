@@ -5,12 +5,11 @@ let addToCartButton = document.getElementById("addToCart");
 
 /*
 Faut qu'on ait aussi l'id du produit!!!!!!
-*/
+
 let colorProduct = document.getElementById("colors");
 let quantityProduct = document.getElementById("quantity");
 
 /*
-
 let objectProductCartDetails ={
 id: 'color',
 color: colorProduct,
@@ -57,9 +56,3 @@ function registerProducts(listOfProducts){
 }
 
 
-
-
-addToCartButton.addEventListener("submit", function(e){
-  e.preventDefault();
-  addedToCart();
-});

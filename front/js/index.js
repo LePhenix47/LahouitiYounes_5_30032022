@@ -1,5 +1,5 @@
 
-console.log("Hello world");
+console.log("index.js");
 
 let itemsSection = document.getElementById("items");
 
