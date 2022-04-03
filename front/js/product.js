@@ -29,6 +29,8 @@ console.log("Buongiorno mondo");
 
 //IDEE: Ce que l'on peut faire c'est récupérer l'id du produit et ensuite lui afficher ses details
 
+let productPageTitle = document.querySelector("title");
+
 let itemImage = document.getElementsByClassName("item__img")[0]; //vu qu'on récupère un TABLEAU d'éléments et que je ne veux que la 1ère valeur on ajoute l'index du tableau → [0]
 
 let itemTitle = document.getElementById("title");
@@ -46,8 +48,7 @@ function getParameter(parameterName) {
 }
 
 /*
-Cette fonction nous permet d'afficher le produit grâce à son ID
-    
+Cette fonction nous permet d'afficher les données/détails du produit grâce à son ID par appel d'API
 */
 async function showProductDetails() {
   try {
@@ -60,7 +61,7 @@ async function showProductDetails() {
     console.log(urlProductsAPI + productId);
 
     const { imageUrl, altTxt, colors, name, price, description } = couchProduct;
-
+    productPageTitle.textContent = name;
     itemImage.innerHTML = `
         <img src="${imageUrl}" alt="${altTxt}">
                 `;
