@@ -104,14 +104,19 @@ function registerProducts(listOfProducts) {
   //'Stringify'er parce que l'on a un SETTER → le localStorage DOIT enregistrer les types complexes (tableaux & objets) au format texte sinon on perd le type
 }
 
+//Cette fonction vérifie qu'il n'y ait pas de redondance de produits
 function verifyProductRedundancy(listOfProducts){
   let listOfProducts = localStorage.getItem("listOfProducts");
   JSON.parse(listOfProducts);
 
   for(product of listOfProducts){
-    let {id, color, quantity} = product;  
+    let {id, color, quantity} = product;
+
   }
 }
+
+//cette fonction va remplacer la vielle quantité de produits par la nouvelle quand l'ID + couleur produit est la même
+function verifyProductQuantity();
 
 
 
