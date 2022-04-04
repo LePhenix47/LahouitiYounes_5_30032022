@@ -70,26 +70,34 @@ async function showProductDetails() {
 
 showProductDetails();
 
+let quantityProduct = document.getElementById("quantity");
+let valid = true;
+let colorValue = 0;
+let quantityValue = 0;
 
+//On écoute les évènements lorsqu'on change de couleur et de quantité
+itemColors.addEventListener("change", function (event) {
+  colorValue = event.target.value;
+  console.log(colorValue);
+});
 
-
-
-
-
-
+quantityProduct.addEventListener("input", function (event) {
+  quantityValue = event.target.value;
+  console.log(quantityValue);
+});
 
 //Ajoute les produits 1 par 1 !!!!Faut faire plutot un tableau d'objets w/: ID, QUANTITé Prouit & COULEUR produit
 function addedToCart(productObject) {
   let listOfProducts = getProducts();
-  listOfProducts.push(productObject);
+  let verifyProduct = productObject;
+  filterRedundantProducts(verifyProduct, listOfProducts);
+  listOfProducts.push(verifyProduct);
   registerProducts(listOfProducts);
 }
 
-/*
-Récupère les produits dans un tableau
-*/
+//Récupère les produits dans un tableau
 function getProducts() {
-  let listOfProducts = localStorage.getItem("listOfProducts");
+  let listOfProducts = localStorage.getItem("List of products added to cart");
   if (listOfProducts == null) {
     return [];
   } else {
@@ -100,29 +108,23 @@ function getProducts() {
 
 //Enregistre les produits localment dans un tableau d'objet
 function registerProducts(listOfProducts) {
-  localStorage.setItem("listOfProducts", JSON.stringify(listOfProducts));
+  localStorage.setItem(
+    "List of products added to cart",
+    JSON.stringify(listOfProducts)
+  );
   //'Stringify'er parce que l'on a un SETTER → le localStorage DOIT enregistrer les types complexes (tableaux & objets) au format texte sinon on perd le type
 }
 
-//Cette fonction vérifie qu'il n'y ait pas de redondance de produits
-function verifyProductRedundancy(listOfProducts){
-  let listOfProducts = localStorage.getItem("listOfProducts");
-  JSON.parse(listOfProducts);
-
-  for(product of listOfProducts){
-    let {id, color, quantity} = product;
-
-  }
+function filterRedundantProducts(objectProduct, listOfProducts) {
+  let filteredListOfProducts = listOfProducts.filter(function () {
+    return !(
+      objectProduct.id == productId && objectProduct.color == colorValue
+    );
+  });
+  return filteredListOfProducts;
 }
 
 //cette fonction va remplacer la vielle quantité de produits par la nouvelle quand l'ID + couleur produit est la même
-function verifyProductQuantity();
-
-
-
-
-
-
 
 //Cette classe permet d'ajouter des instances d'objet d'un produit
 class classProductCartDetails {
@@ -133,28 +135,6 @@ class classProductCartDetails {
   }
 }
 
-let quantityProduct = document.getElementById("quantity");
-let valid = true;
-
-let colorValue = 0;
-let quantityValue = 0;
-
-
-//On écoute les évènements lorsqu'on change de couleur et de quantité 
-itemColors.addEventListener("change", function (event) {
-  colorValue = event.target.value;
-  console.log(colorValue);
-});
-
-
-
-quantityProduct.addEventListener("input", function (event) {
-  quantityValue = event.target.value;
-  console.log(quantityValue);
-});
-
-
-
 //La faudra envoyer la commande dans le panier en le stockant avec w/ WebStorage → localStorage + preventDefault du bouton commander dans l'Event listener
 //Il doit enregistrer → L'id du canapé ainsi que: Le prix, le nom, le nombre d'articles,
 
@@ -164,7 +144,7 @@ quantityProduct.addEventListener("input", function (event) {
 
 !ATTENTION: Faut changer la fonction parcequ'elle ajoute le même produit
 
-*/ 
+*/
 addToCartButton.addEventListener("click", function () {
   if (quantityValue > 0 && quantityValue <= 100 && colorValue != 0) {
     let objectProduct = new classProductCartDetails(
@@ -175,14 +155,15 @@ addToCartButton.addEventListener("click", function () {
 
     console.table(objectProduct);
 
-    alert("Votre produit a bien été ajouté au panier!");
     addedToCart(objectProduct);
-  }
 
-  if (quantityValue <= 0) {
-    alert("Attention! La quantité saisie est invalide");
+    alert("Votre produit a bien été ajouté au panier!");
   }
-  if (colorValue == 0) {
+  if (colorValue == 0 && (quantityValue <= 0 || quantityValue > 100)) {
+    alert("Attention! Veuillez ajouter les détails du produits");
+  } else if (colorValue == 0) {
     alert("Attention! Vous devez choisir une couleur");
+  } else if (quantityValue <= 0 || quantityValue > 100) {
+    alert("Attention! La quantité saisie est invalide");
   }
 });
