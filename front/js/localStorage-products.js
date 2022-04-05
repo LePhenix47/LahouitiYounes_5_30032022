@@ -1,4 +1,4 @@
-const urlProductsAPI = "http://localhost:3000/api/products/";
+var urlProductsAPI = "http://localhost:3000/api/products/";
 
 function addedToCart(productObject) {
     let listOfProducts = getProducts();
