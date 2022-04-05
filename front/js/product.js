@@ -21,9 +21,9 @@ const urlProductsAPI = "http://localhost:3000/api/products/";
 function getParameter(parameterName) {
   let parameters = new URLSearchParams(window.location.search);
   if (parameters.has(parameterName)) {
-    console.log("Le paramètre: " + parameterName + " est présent dans l'URL");
+    return parameters.get(parameterName);
   }
-  return parameters.get(parameterName);
+  return "Paramètre " + parameterName + " n'a pas été trouvé";
 }
 
 /*
@@ -87,11 +87,19 @@ quantityProduct.addEventListener("input", function (event) {
 });
 
 //Ajoute les produits 1 par 1 !!!!Faut faire plutot un tableau d'objets w/: ID, QUANTITé Prouit & COULEUR produit
+/*
 function addedToCart(productObject) {
   let listOfProducts = getProducts();
   let verifyProduct = productObject;
   filterRedundantProducts(verifyProduct, listOfProducts);
   listOfProducts.push(verifyProduct);
+  registerProducts(listOfProducts);
+}
+*/
+
+function addedToCart(productObject) {
+  let listOfProducts = getProducts();
+  verifyProducts(productObject, listOfProducts);
   registerProducts(listOfProducts);
 }
 
@@ -106,23 +114,46 @@ function getProducts() {
   }
 }
 
+let verifyProducts = (objectToVerify,arrayOfObjects) => {
+  let verifyProduct = arrayOfObjects.find((object) => 
+ object.id === objectToVerify.id && object.color === objectToVerify.color
+  ); 
+
+  if(verifyProduct){
+    verifyProduct.quantity = objectToVerify.quantity;
+  }else{
+    arrayOfObjects.push(objectToVerify);
+  }
+}
+
 //Enregistre les produits localment dans un tableau d'objet
 function registerProducts(listOfProducts) {
   localStorage.setItem(
     "List of products added to cart",
     JSON.stringify(listOfProducts)
   );
+
+
+
+
+
   //'Stringify'er parce que l'on a un SETTER → le localStorage DOIT enregistrer les types complexes (tableaux & objets) au format texte sinon on perd le type
 }
 
+/*  
 function filterRedundantProducts(objectProduct, listOfProducts) {
   let filteredListOfProducts = listOfProducts.filter(function () {
-    return !(
-      objectProduct.id == productId && objectProduct.color == colorValue
+    const { id, color } = objectProduct;
+    console.log(
+      "%c" + productId + "%c" + color,
+      "background-color: red",
+      "background-color: blue"
     );
+    return !(id === productId && color === colorValue);
   });
-  return filteredListOfProducts;
+  registerProducts(filteredListOfProducts);
 }
+*/
 
 //cette fonction va remplacer la vielle quantité de produits par la nouvelle quand l'ID + couleur produit est la même
 
@@ -150,14 +181,14 @@ addToCartButton.addEventListener("click", function () {
     let objectProduct = new classProductCartDetails(
       productId,
       colorValue,
-      quantityValue
+      Number(quantityValue)
     );
 
     console.table(objectProduct);
 
     addedToCart(objectProduct);
-
     alert("Votre produit a bien été ajouté au panier!");
+
   }
   if (colorValue == 0 && (quantityValue <= 0 || quantityValue > 100)) {
     alert("Attention! Veuillez ajouter les détails du produits");
