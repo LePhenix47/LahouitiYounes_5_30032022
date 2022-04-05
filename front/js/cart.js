@@ -15,19 +15,22 @@ let firstNameErrorMessage = document.getElementById("firstNameErrorMsg");
                   <div class="cart__item__content__description">
                     <h2>${name}</h2>
 
-                    <p>${color}</p> → A AJOUTER 'MANUELLEMENT' w/ createElement, appendChild & textContent pour chaque produit w/ boucle
+x                   <p>${color}</p> → A AJOUTER 'MANUELLEMENT' w/ createElement, appendChild & textContent pour chaque produit w/ boucle
 
                     <p>${price}</p>
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
 
-                      <p>Qté : ${quantity}</p> → A AJOUTER 'MANUELLEMENT' w/ createElement, appendChild & textContent pour chaque produit w/ boucle
+x                      <p>Qté : ${quantity}</p> → A AJOUTER 'MANUELLEMENT' w/ createElement, appendChild & textContent pour chaque produit w/ boucle
 
                       <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product-quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">${removeObject(object)}</p>
+
+x                   <p class="deleteItem">${removeObject(object)}</p> → Faire "à la main"
+
+
                     </div>
                   </div>
                 </div>
@@ -64,14 +67,18 @@ let quantityProductCart = 0;
 
 let arrayOfIds = [];
 
-getProductDetails();
+console.log("%c" + getProductDetails(), "background: #8418ca");
 
 console.groupCollapsed("Dans la fonction getCartProducts");
+
 let getCartProducts = () => {
   try {
     //L'ID, couleur & quantité de produits → dans le tableau d'objects stocké localement
     let cartItemsList = getProducts();
-    console.log("%cLa liste de produits du panier stockée localement est ici: ","background: #106bba")
+    console.log(
+      "%cLa liste de produits du panier stockée localement est ici: ",
+      "background: #106bba"
+    );
     console.table(cartItemsList);
     getProductDetails();
 
@@ -106,25 +113,45 @@ let getCartProducts = () => {
 };
 
 getCartProducts();
-console.log("%cTableau des IDs","background:#4eba10");
+console.log("%cTableau des IDs", "background:#4eba10");
 console.table(arrayOfIds);
 console.groupEnd("Dans la fonction getCartProducts");
 //-----------------------------------------------------------//
 
 console.groupCollapsed("Dans la fonction getProductDetails");
+
+
 async function getProductDetails() {
   try {
-    for (IdElement of arrayOfIds) {
-      idProductCart = IdElement;
-console.log(idProductCart);
+  
+      idProductCart;
 
-      let response = await fetch(urlProductsAPI + idProductCart);
-      let productDetailsList = await response.json;
+      console.log(idProductCart);
 
-      for(product of productDetailsList){
-          const {_id, name, price, imageUrl, altTxt, description} = product;
-        cardItems.innerHTML +=  `
-          <article class="cart__item" data-id="${_id}" data-color="${product-color}">
+      let response = await fetch(urlProductsAPI);
+      let productDetailsList = await response.json();
+
+      for (product of productDetailsList) {
+        const { _id, name, price, imageUrl, altTxt } = product;
+        console.log(
+          "%cInfos produit: " +
+            "ID Produit: " +
+            _id +
+            "\n" +
+            "nom produit: " +
+            name +
+            "\n" +
+            "Prix: " +
+            price +
+            "\n" +
+            "Image" +
+            imageUrl +
+            " w/ texte alteratif " +
+            altTxt,
+          "background: #0bff22; color: black"
+        );
+        cartItems.innerHTML += `
+          <article class="cart__item" data-id="${_id}">
           <div class="cart__item__img">
             <img src="${imageUrl}" alt="${altTxt}">
           </div>
@@ -136,25 +163,24 @@ console.log(idProductCart);
             </div>
             <div class="cart__item__content__settings">
               <div class="cart__item__content__settings__quantity">
-                <p>Qté : </p>
-                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product-quantity}">
+              
               </div>
               <div class="cart__item__content__settings__delete">
-                <p class="deleteItem">${removeObject(product)}</p>
+              
               </div>
             </div>
           </div>
         </article>
-          `
+          `;
       }
 
-      console.log(
-        "Details produit: " +
-         idProductCart
-      );
+      console.log("Details produit: " + idProductCart);
     }
-  } catch (error) {
-    console.log("%cAttention! ERREUR detectée", "background: red");
+   catch (error) {
+    console.log(
+      "%cAttention! ERREUR detectée" + " voir les détails ↓ ",
+      "background: red"
+    );
     console.error(error);
   }
 }
