@@ -27,6 +27,12 @@ function addedToCart(productObject) {
       arrayOfObjects.push(objectToVerify);
     }
   }
+
+  
+let removeProducts = (objectToRemove) => {
+    let listOfProducts = getProducts();
+    listOfProducts.filter((object) => object.id != objectToRemove);
+  };
   
   //Enregistre les produits localment dans un tableau d'objet
   function registerProducts(listOfProducts) {

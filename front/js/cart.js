@@ -31,33 +31,38 @@ let firstNameErrorMessage = document.getElementById("firstNameErrorMsg");
 
  
  */
-let getProductDetails = async (productId) => {
-  let response = await fetch(urlProductsAPI + productId);
-  let productDetailsList = await response.json();
 
-  for (product of productDetailsList) {
-    const { id, color, quantity } = product;
-    console.log(
-      "Details produit: " +
-        id +
-        " couleur " +
-        color +
-        " et quantité " +
-        quantity
-    );
+              
+let getProductDetails = async (productId) => {
+  try {
+    let response = await fetch(urlProductsAPI + productId);
+    let productDetailsList = await response.json();
+
+   
+    for (let product of productDetailsList) {
+      const { id, color, quantity } = product;
+      console.log(
+        "Details produit: " +
+          id +
+          " couleur " +
+          color +
+          " et quantité " +
+          quantity
+      );
+    }
+  } catch (error) {
+    console.log("%cAttention! ERREUR detectée", "background: red");
+    console.error(error);
   }
 };
 
-let removeProducts = (objectToRemove) => {
-  let listOfProducts = getProducts();
-  listOfProducts.filter((object) => object.id != objectToRemove);
-};
 
 let getCartProducts = () => {
   //L'ID, couleur & quantité de produits → dans le tableau d'objects stocké localement
   let cartItemsList = getProducts();
+  console.log(cartItemsList);
 
-  for (cartItem of cartItemsList) {
+  for (let cartItem of cartItemsList) {
     const { id } = cartItem;
     getProductDetails(id);
     console.table(cartItem);

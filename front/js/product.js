@@ -15,7 +15,7 @@ let itemColors = document.getElementById("colors");
 
 let addToCartButton = document.getElementById("addToCart");
 
-const urlProductsAPI = "http://localhost:3000/api/products/";
+
 
 //Cette fonction permet de nous retourner la valeur du paramètre dans l'URL
 function getParameter(parameterName) {
@@ -86,78 +86,6 @@ quantityProduct.addEventListener("input", function (event) {
   console.log(quantityValue);
 });
 
-//Ajoute les produits 1 par 1 !!!!Faut faire plutot un tableau d'objets w/: ID, QUANTITé Prouit & COULEUR produit
-/*
-function addedToCart(productObject) {
-  let listOfProducts = getProducts();
-  let verifyProduct = productObject;
-  filterRedundantProducts(verifyProduct, listOfProducts);
-  listOfProducts.push(verifyProduct);
-  registerProducts(listOfProducts);
-}
-*/
-
-function addedToCart(productObject) {
-  let listOfProducts = getProducts();
-  verifyProducts(productObject, listOfProducts);
-  registerProducts(listOfProducts);
-}
-
-//Récupère les produits dans un tableau
-function getProducts() {
-  let listOfProducts = localStorage.getItem("List of products added to cart");
-  if (listOfProducts == null) {
-    return [];
-  } else {
-    return JSON.parse(listOfProducts);
-    //'Parse'r parce que l'on a un GETTER → On reçoit un objet JSON stringifié et on veut récupérer variable + type de la variable
-  }
-}
-
-let verifyProducts = (objectToVerify,arrayOfObjects) => {
-  let verifyProduct = arrayOfObjects.find((object) => 
- object.id === objectToVerify.id && object.color === objectToVerify.color
-  ); 
-
-  if(verifyProduct){
-    verifyProduct.quantity = objectToVerify.quantity;
-  }else{
-    arrayOfObjects.push(objectToVerify);
-  }
-}
-
-//Enregistre les produits localment dans un tableau d'objet
-function registerProducts(listOfProducts) {
-  localStorage.setItem(
-    "List of products added to cart",
-    JSON.stringify(listOfProducts)
-  );
-
-
-
-
-
-  //'Stringify'er parce que l'on a un SETTER → le localStorage DOIT enregistrer les types complexes (tableaux & objets) au format texte sinon on perd le type
-}
-
-/*  
-function filterRedundantProducts(objectProduct, listOfProducts) {
-  let filteredListOfProducts = listOfProducts.filter(function () {
-    const { id, color } = objectProduct;
-    console.log(
-      "%c" + productId + "%c" + color,
-      "background-color: red",
-      "background-color: blue"
-    );
-    return !(id === productId && color === colorValue);
-  });
-  registerProducts(filteredListOfProducts);
-}
-*/
-
-//cette fonction va remplacer la vielle quantité de produits par la nouvelle quand l'ID + couleur produit est la même
-
-//Cette classe permet d'ajouter des instances d'objet d'un produit
 class classProductCartDetails {
   constructor(id, color, quantity) {
     this.id = id;
