@@ -67,11 +67,7 @@ let productPrice = 0;
 let totalQuantityProductValue = 0;
 let totalPriceProductValue = 0;
 
-
 console.groupCollapsed("Dans la fonction getCartProducts");
-
-
-
 
 console.groupEnd("Dans la fonction getCartProducts");
 //-----------------------------------------------------------//
@@ -80,7 +76,6 @@ console.groupCollapsed("Dans la fonction getProductDetails");
 
 let getProductDetails = async () => {
   try {
-
     let response = await fetch(urlProductsAPI);
     let productDetailsList = await response.json();
   } catch (error) {
@@ -90,10 +85,9 @@ let getProductDetails = async () => {
     );
     console.error(error);
   }
-}
+};
 getProductDetails();
 console.groupEnd("Dans la fonction getProductDetails");
-
 
 let getCartProducts = () => {
   try {
@@ -115,7 +109,7 @@ let getCartProducts = () => {
         altTxt,
         name,
         price,
-        description,
+        // ,description,
       } = cartItem;
       idProductCart = id;
       colorProductCart = color;
@@ -150,8 +144,6 @@ let getCartProducts = () => {
       `;
       totalQuantityItemsElement.textContent = totalQuantityProductValue;
       totalPriceItemsElement.textContent = totalPriceProductValue;
-
-      
     }
 
     //À partir de l'ID → faut récupérer l'ID du produit pour lui afficher → Image w/ txt alt, Nom, Couleur & Prix
@@ -164,15 +156,25 @@ getCartProducts();
 
 //--------------------------------------------------------------
 
-let inputQuantityValueElement =
-  document.getElementsByClassName("itemQuantity")[0];
+console.group("Parsed Input Quantity");
+console.dir(cartItemsElement);
 
-  inputQuantityValueElement.addEventListener("input", (e) => {
-    let inputQuantityValue = e.target.value;
-    console.log(inputQuantityValue);
-    let listOfProductsInCart = getProducts();
-    console.table(listOfProductsInCart);
-    for(product of listOfProductsInCart){
-      
-    }
-  });
+const parser = new DOMParser();
+let parsedInput = parser.parseFromString(cartItemsElement, "text/html");
+
+let inputQuantityValueElement = parsedInput.querySelectorAll(
+  'input [class="itemQuantity"]'
+);
+
+console.dir(inputQuantityValueElement);
+
+parsedInput.addEventListener("change", function (e) {
+  let inputQuantityValue = e.target.value;
+  console.log("La quantité vaut" + inputQuantityValue);
+  let listOfProductsInCart = getProducts();
+  console.table(listOfProductsInCart);
+  for (product of listOfProductsInCart) {
+  }
+});
+
+console.groupEnd("Parsed Input Quantity");
