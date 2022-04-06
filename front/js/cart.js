@@ -60,12 +60,13 @@ x                   <p class="deleteItem">${removeObject(object)}</p> → Faire 
 //     console.error(error);
 //   }
 // };
-
+let cartItemsList = [];
 let idProductCart = "";
 let colorProductCart = "";
 let productPrice = 0;
 let totalQuantityProductValue = 0;
 let totalPriceProductValue = 0;
+let productDetailsList = [];
 
 console.groupCollapsed("Dans la fonction getCartProducts");
 
@@ -77,7 +78,10 @@ console.groupCollapsed("Dans la fonction getProductDetails");
 let getProductDetails = async () => {
   try {
     let response = await fetch(urlProductsAPI);
-    let productDetailsList = await response.json();
+    productDetailsList = await response.json();
+
+    getCartProducts();
+    changeQuantityProduct();
   } catch (error) {
     console.log(
       "%cAttention! ERREUR detectée" + " voir les détails ↓ ",
@@ -86,38 +90,32 @@ let getProductDetails = async () => {
     console.error(error);
   }
 };
+
 getProductDetails();
+
 console.groupEnd("Dans la fonction getProductDetails");
 
 let getCartProducts = () => {
   try {
     //L'ID, couleur & quantité de produits → dans le tableau d'objects stocké localement
-    let cartItemsList = getProducts();
-    console.log(
-      "%cLa liste de produits du panier stockée localement est ici: ",
-      "background: #106bba"
-    );
-    console.table(cartItemsList);
-    getProductDetails();
+    cartItemsList = getProducts();
 
-    for (let cartItem of cartItemsList) {
-      const {
-        id,
-        color,
-        quantity,
-        imageUrl,
-        altTxt,
-        name,
-        price,
-        // ,description,
-      } = cartItem;
+    console.log("Test produit", productDetailsList);
+
+    for (i = 0; i < cartItemsList.length; i++) {
+      const { id, color, quantity } = cartItemsList[i];
       idProductCart = id;
       colorProductCart = color;
       quantityProductCart = quantity;
 
-      totalQuantityProductValue += quantity;
-      productPrice = price * quantity;
-      totalPriceProductValue += productPrice;
+      console.log("%c" + productDetailsList, "background: orange");
+
+      const product = productDetailsList.find(
+        (content) => content._id === idProductCart
+      );
+
+      console.log("%c" + product, "background: purple");
+      const { name, imageUrl, altTxt, price, description } = product;
 
       cartItemsElement.innerHTML += `
       <article class="cart__item" data-id="${id}" data-color="${color}">
@@ -132,8 +130,8 @@ let getCartProducts = () => {
         </div>
         <div class="cart__item__content__settings">
           <div class="cart__item__content__settings__quantity">
-            <p id="quantityOFProduct">Qté : ${quantity}</p>
-            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantity}">
+            <p id="quantityOFProduct">Qté : ${quantityProductCart}</p>
+            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantityProductCart}" data-index="${i}">
           </div>
           <div class="cart__item__content__settings__delete">
             <p class="deleteItem">Supprimer</p>
@@ -142,6 +140,10 @@ let getCartProducts = () => {
       </div>
     </article>
       `;
+
+      totalQuantityProductValue += quantity;
+      productPrice = price * quantity;
+      totalPriceProductValue += productPrice;
       totalQuantityItemsElement.textContent = totalQuantityProductValue;
       totalPriceItemsElement.textContent = totalPriceProductValue;
     }
@@ -152,29 +154,31 @@ let getCartProducts = () => {
     console.error(error);
   }
 };
-getCartProducts();
 
 //--------------------------------------------------------------
 
 console.group("Parsed Input Quantity");
-console.dir(cartItemsElement);
+let changeQuantityProduct = () => {
+  console.dir(cartItemsElement);
 
-const parser = new DOMParser();
-let parsedInput = parser.parseFromString(cartItemsElement, "text/html");
+  let inputQuantityValueElement =
+    document.getElementsByClassName("itemQuantity");
 
-let inputQuantityValueElement = parsedInput.querySelectorAll(
-  'input [class="itemQuantity"]'
-);
+  console.dir(inputQuantityValueElement);
 
-console.dir(inputQuantityValueElement);
+  for (i = 0; i < inputQuantityValueElement.length; i++) {
+    inputQuantityValueElement[i].addEventListener("input", function (e) {
+      const indexData = this.getAttribute("data-index");
+      const element = cartItemsElement.children[Number(indexData)];
+      console.log("index" + indexData, element);
+      const id = element.getAttribute("data-id");
+      const color = element.getAttribute("data-color");
 
-parsedInput.addEventListener("change", function (e) {
-  let inputQuantityValue = e.target.value;
-  console.log("La quantité vaut" + inputQuantityValue);
-  let listOfProductsInCart = getProducts();
-  console.table(listOfProductsInCart);
-  for (product of listOfProductsInCart) {
+      const item = cartItemsList.find(
+        (content) => content.id === id && content.color === color
+      );
+    });
   }
-});
+};
 
 console.groupEnd("Parsed Input Quantity");

@@ -83,30 +83,12 @@ showProductDetails();
 
 let quantityProduct = document.getElementById("quantity");
 let valid = true;
-let colorValue = 0;
-let quantityValue = 0;
-
-//On écoute les évènements lorsqu'on change de couleur et de quantité
-itemColors.addEventListener("change", function (event) {
-  colorValue = event.target.value;
-  console.log(colorValue);
-});
-
-quantityProduct.addEventListener("input", function (event) {
-  quantityValue = event.target.value;
-  console.log(quantityValue);
-});
 
 class classProductCartDetails {
-  constructor(id, color, quantity, imageUrl, altTxt, price, name, description) {
+  constructor(id, color, quantity) {
     this.id = id;
     this.color = color;
     this.quantity = quantity;
-    this.imageUrl = imageUrl;
-    this.altTxt = altTxt;
-    this.price = price;
-    this.name = name;
-    this.description = description;
   }
 }
 
@@ -121,16 +103,14 @@ class classProductCartDetails {
 
 */
 addToCartButton.addEventListener("click", function () {
+  let colorValue =   itemColors.value;
+  let quantityValue = quantityProduct.value;
+
   if (quantityValue > 0 && quantityValue <= 100 && colorValue != 0) {
     let objectProduct = new classProductCartDetails(
       productId,
       colorValue,
-      Number(quantityValue),
-      imageUrlProduct,
-      alternativeText,
-      Number(productPrice),
-      productName,
-      productDescription
+      Number(quantityValue)
     );
 
     console.table(objectProduct);

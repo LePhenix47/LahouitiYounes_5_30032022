@@ -25,7 +25,7 @@ let verifyProducts = (objectToVerify, arrayOfObjects) => {
   );
 
   if (verifyProduct) {
-    verifyProduct.quantity = objectToVerify.quantity;
+    verifyProduct.quantity = Number(objectToVerify.quantity) +  Number(verifyProduct.quantity);
   } else {
     arrayOfObjects.push(objectToVerify);
   }
@@ -35,7 +35,7 @@ let verifyProducts = (objectToVerify, arrayOfObjects) => {
 //********--------------------Supression--------------------********//
 let removeProducts = (objectToRemove) => {
   let listOfProducts = getProducts();
-  listOfProducts.filter((object) => object.id != objectToRemove);
+  return listOfProducts.filter((object) => object.id != objectToRemove && object.color != objectToRemove);
 };
 
 //Enregistre les produits localment dans un tableau d'objet
