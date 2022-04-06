@@ -15,8 +15,11 @@ let itemColors = document.getElementById("colors");
 
 let addToCartButton = document.getElementById("addToCart");
 
-
-
+let productPrice = 0;
+let imageUrlProduct = "";
+let alternativeText = "";
+let productName = "";
+let productDescription = "";
 
 /*
 Cette fonction nous permet d'afficher les données/détails du produit grâce à son ID par appel d'API
@@ -32,6 +35,8 @@ async function showProductDetails() {
     const { imageUrl, altTxt, colors, name, price, description } = couchProduct;
 
     productPageTitle.textContent = name;
+    productName = name;
+
     productPageDescription.setAttribute(
       "content",
       `Description du produit ${name}: ${description}`
@@ -40,14 +45,28 @@ async function showProductDetails() {
     itemImage.innerHTML = `
         <img src="${imageUrl}" alt="${altTxt}">
                 `;
+    imageUrlProduct = imageUrl;
+    alternativeText = altTxt;
     itemTitle.textContent = name;
     itemPrice.textContent = price;
+    productPrice = price;
+
     itemDescription.textContent = description;
+    productDescription = description;
     for (color of colors) {
       itemColors.innerHTML += `
           <option value="${color}">${color}</option>
           `;
     }
+    console.log(
+      imageUrlProduct +
+        "\n" +
+        alternativeText +
+        "\n" +
+        productPrice +
+        "\n" +
+        productDescription
+    );
     return productId;
   } catch (error) {
     console.log(
@@ -79,10 +98,15 @@ quantityProduct.addEventListener("input", function (event) {
 });
 
 class classProductCartDetails {
-  constructor(id, color, quantity) {
+  constructor(id, color, quantity, imageUrl, altTxt, price, name, description) {
     this.id = id;
     this.color = color;
     this.quantity = quantity;
+    this.imageUrl = imageUrl;
+    this.altTxt = altTxt;
+    this.price = price;
+    this.name = name;
+    this.description = description;
   }
 }
 
@@ -101,14 +125,18 @@ addToCartButton.addEventListener("click", function () {
     let objectProduct = new classProductCartDetails(
       productId,
       colorValue,
-      Number(quantityValue)
+      Number(quantityValue),
+      imageUrlProduct,
+      alternativeText,
+      Number(productPrice),
+      productName,
+      productDescription
     );
 
     console.table(objectProduct);
 
     addedToCart(objectProduct);
     alert("Votre produit a bien été ajouté au panier!");
-
   }
   if (colorValue == 0 && (quantityValue <= 0 || quantityValue > 100)) {
     alert("Attention! Veuillez ajouter les détails du produits");
