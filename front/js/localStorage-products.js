@@ -25,17 +25,19 @@ let verifyProducts = (objectToVerify, arrayOfObjects) => {
   );
 
   if (verifyProduct) {
-    verifyProduct.quantity = Number(objectToVerify.quantity) +  Number(verifyProduct.quantity);
+    verifyProduct.quantity =
+      Number(objectToVerify.quantity) + Number(verifyProduct.quantity);
   } else {
     arrayOfObjects.push(objectToVerify);
   }
 };
 
-
 //********--------------------Supression--------------------********//
 let removeProducts = (objectToRemove) => {
   let listOfProducts = getProducts();
-  return listOfProducts.filter((object) => object.id != objectToRemove && object.color != objectToRemove);
+  return listOfProducts.filter(
+    (objectInCart) => objectInCart.id !== objectToRemove.id && objectInCart.color !== objectToRemove.color
+  );
 };
 
 //Enregistre les produits localment dans un tableau d'objet
