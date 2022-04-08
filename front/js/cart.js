@@ -152,13 +152,19 @@ let getCartProducts = () => {
       cartItemsElement.appendChild(article);
 
       //-----------------------------------------------------------//
+      console.group("Logs de la suppression ou du changement");
+
       changeItemQuantityInput = numberOfProductsInput;
       deleteItemButton = deleteItemActualItemParagraph;
       itemArticle = article;
 
       deleteItemButton.addEventListener("click", () => {
-        console.log(removeProducts(item));
-        removeProducts(item);
+        let removedItem = removeProducts(item);
+        let newCartList = registerProducts(removedItem);
+
+        console.log(removedItem);
+        console.log(newCartList);
+
         cartItemsElement.removeChild(article);
       });
 
@@ -174,7 +180,7 @@ let getCartProducts = () => {
             itemArticle.getAttribute("data-color")
         );
       });
-
+      console.groupEnd("Logs de la suppression ou du changement");
       //-----------------------------------------------------------//
       totalQuantityProductValue += quantity;
       productPrice = price * quantity;
