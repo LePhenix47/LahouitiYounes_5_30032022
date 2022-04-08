@@ -1,6 +1,6 @@
-var cartItemsElement = document.getElementById("cart__items");
-var totalQuantityItemsElement = document.getElementById("totalQuantity");
-var totalPriceItemsElement = document.getElementById("totalPrice");
+let cartItemsElement = document.getElementById("cart__items");
+let totalQuantityItemsElement = document.getElementById("totalQuantity");
+let totalPriceItemsElement = document.getElementById("totalPrice");
 
 let firstNameErrorMessageElement = document.getElementById("firstNameErrorMsg");
 
@@ -16,6 +16,10 @@ let totalPriceProductValue = 0;
 
 let productDetailsList = [];
 
+let changeItemQuantityInput = undefined;
+let deleteItemButton = undefined;
+let itemArticle = undefined;
+
 console.groupCollapsed("Dans la fonction getCartProducts");
 
 console.groupEnd("Dans la fonction getCartProducts");
@@ -23,6 +27,7 @@ console.groupEnd("Dans la fonction getCartProducts");
 
 console.groupCollapsed("Dans la fonction getProductDetails");
 
+//On récupère la liste de tous les produits et ensuite on appelle la fonction pour montrer tous les produits dans le panier
 let getProductDetails = async () => {
   try {
     let response = await fetch(urlProductsAPI);
@@ -68,53 +73,54 @@ let getCartProducts = () => {
       const { name, imageUrl, altTxt, price } = productInCart;
 
       console.log(
-        "%c Détails du produit dans le localStorage:",
+        "%c Détails du produit dans le localStorage AVEC les propriétés du produit:",
         "background: purple"
       );
-      //-----------------------------------------------------------//
-      var article = document.createElement("article"); //<article>
+
+      //---------------------------Création liste pproduits du panier--------------------------------//
+      let article = document.createElement("article"); //<article>
       article.classList.add("cart__item");
       article.setAttribute("data-id", id);
       article.setAttribute("data-color", color);
 
-      var divItemImage = document.createElement("div");
+      let divItemImage = document.createElement("div");
       divItemImage.classList.add("cart__item__img");
 
-      var itemImage = document.createElement("img");
+      let itemImage = document.createElement("img");
       itemImage.setAttribute("src", imageUrl);
       itemImage.setAttribute("alt", altTxt);
 
       divItemImage.appendChild(itemImage); //<div item__img> <img/> </div>
 
-      var divItemContent = document.createElement("div"); //<div content> </div>
+      let divItemContent = document.createElement("div"); //<div content> </div>
       divItemContent.classList.add("cart__item__content");
 
-      var divItemDescription = document.createElement("div"); //<div description> </div>
+      let divItemDescription = document.createElement("div"); //<div description> </div>
       divItemDescription.classList.add("cart__item__content__description");
 
-      var itemNameHeading2 = document.createElement("h2"); //<h2></h2>
+      let itemNameHeading2 = document.createElement("h2"); //<h2></h2>
       itemNameHeading2.textContent = name;
 
-      var itemColorParagraph = document.createElement("p"); //<p color></p>
+      let itemColorParagraph = document.createElement("p"); //<p color></p>
       itemColorParagraph.textContent = "Couleur: " + color;
 
-      var itemPriceParagraph = document.createElement("p"); //<p price></p>
+      let itemPriceParagraph = document.createElement("p"); //<p price></p>
       itemPriceParagraph.textContent = "Prix à l'unité: " + price + " €";
 
       divItemDescription.appendChild(itemNameHeading2); // <div description> <h2></h2> </div>
       divItemDescription.appendChild(itemColorParagraph); //  <div description> <h2></h2> <p color></p></div>
       divItemDescription.appendChild(itemPriceParagraph); //  <div description> <h2></h2> <p color></p>  <p price></p> </div>
 
-      var divItemSettings = document.createElement("div"); //<div settings></div>
+      let divItemSettings = document.createElement("div"); //<div settings></div>
       divItemSettings.classList.add("cart__item__content__settings");
 
-      var divItemQuantity = document.createElement("div"); //<div quantity></div>
+      let divItemQuantity = document.createElement("div"); //<div quantity></div>
       divItemQuantity.classList.add("cart__item__content__settings__quantity");
 
-      var quantityParagraph = document.createElement("p"); // <p quantité>${quantity}</p>
+      let quantityParagraph = document.createElement("p"); // <p quantité>${quantity}</p>
       quantityParagraph.textContent = "Qté : " + quantity;
 
-      var numberOfProductsInput = document.createElement("input");
+      let numberOfProductsInput = document.createElement("input");
       numberOfProductsInput.classList.add("itemQuantity");
       numberOfProductsInput.setAttribute("type", "number");
       numberOfProductsInput.setAttribute("name", "itemQuantity");
@@ -125,10 +131,10 @@ let getCartProducts = () => {
       divItemQuantity.appendChild(quantityParagraph); //<div quantity> <p quantité>${quantity}</p> </div>
       divItemQuantity.appendChild(numberOfProductsInput); //<div quantity> <p quantité>${quantity}</p> <input/></div>
 
-      var divCartDeleteItems = document.createElement("div"); //<div delete></div>
+      let divCartDeleteItems = document.createElement("div"); //<div delete></div>
       divCartDeleteItems.classList.add("cart__item__content__settings__delete");
 
-      var deleteItemActualItemParagraph = document.createElement("p"); //<p deleteItem></p>
+      let deleteItemActualItemParagraph = document.createElement("p"); //<p deleteItem></p>
       deleteItemActualItemParagraph.classList.add("deleteItem");
       deleteItemActualItemParagraph.textContent = "Supprimer";
 
@@ -146,19 +152,27 @@ let getCartProducts = () => {
       cartItemsElement.appendChild(article);
 
       //-----------------------------------------------------------//
+      changeItemQuantityInput = numberOfProductsInput;
+      deleteItemButton = deleteItemActualItemParagraph;
+      itemArticle = article;
 
-      deleteItemActualItemParagraph.addEventListener("click", () => {
+      deleteItemButton.addEventListener("click", () => {
         console.log(removeProducts(item));
-        console.log("ID actuel du produit: ", id);
         removeProducts(item);
         cartItemsElement.removeChild(article);
       });
 
-      numberOfProductsInput.addEventListener("change", (e) => {
+      console.log("Produit du panier" + cartItemsList);
+
+      changeItemQuantityInput.addEventListener("change", (e) => {
         console.log(
-          "Valeur de l'input = " + e.target.value + " qui est dans le produit: "
+          "Valeur de l'input = " +
+            e.target.value +
+            " qui est dans le produit avec l'ID: " +
+            itemArticle.getAttribute("data-id") +
+            " de couleur: " +
+            itemArticle.getAttribute("data-color")
         );
-        console.log(id);
       });
 
       //-----------------------------------------------------------//
@@ -172,12 +186,37 @@ let getCartProducts = () => {
         });
       //[element].toLocaleString(undefined, { minimumFractionDigits: 0 }) pour rendre: 23790€ → 23 790€
     }
-
-    //À partir de l'ID → faut récupérer l'ID du produit pour lui afficher → Image w/ txt alt, Nom, Couleur & Prix
-    //On stocke tous les ID dans un tableau
   } catch (error) {
     console.error(error);
   }
 };
 
 //--------------------------------------------------------------
+/*
+Fonction qui:
+1. Enlève le produit du panier ( + l'enlève dans le localStorage )
+2. Change la quantité de produit ( = Qté tot - vieille qté ds localStorage + nouvelle qté entrée dans la page)
+*/
+
+/*/
+let changeQuantityOrDeleteItem = () => {
+  deleteItemButton.addEventListener("click", () => {
+    console.log(removeProducts(item));
+    removeProducts(item);
+    cartItemsElement.removeChild(article);
+  });
+
+  console.log("Produit du panier" + cartItemsList);
+
+  changeItemQuantityInput.addEventListener("change", (e) => {
+    console.log(
+      "Valeur de l'input = " +
+        e.target.value +
+        " qui est dans le produit avec l'ID: " +
+        itemArticle.getAttribute("data-id") +
+        " de couleur: " +
+        itemArticle.getAttribute("data-color")
+    );
+  });
+};
+/*/

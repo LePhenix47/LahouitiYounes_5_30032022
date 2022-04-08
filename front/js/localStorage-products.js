@@ -1,4 +1,4 @@
-var urlProductsAPI = "http://localhost:3000/api/products/";
+let urlProductsAPI = "http://localhost:3000/api/products/";
 
 //********--------------------Ajoute les produits en local--------------------********//
 function addedToCart(productObject) {
@@ -32,7 +32,7 @@ let verifyProducts = (objectToVerify, arrayOfObjects) => {
   }
 };
 
-//********--------------------Supression--------------------********//
+//********--------------------Supression de l'éléments du panier--------------------********//
 let removeProducts = (objectToRemove) => {
   let listOfProducts = getProducts();
   return listOfProducts.filter(
@@ -40,7 +40,7 @@ let removeProducts = (objectToRemove) => {
   );
 };
 
-//Enregistre les produits localment dans un tableau d'objet
+//********--------------------Enregistre les produits localment dans un tableau d'objet--------------------********//
 function registerProducts(listOfProducts) {
   localStorage.setItem(
     "List of products added to cart",
