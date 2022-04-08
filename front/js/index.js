@@ -20,14 +20,14 @@ async function products() {
     for (couchProduct of couchProductsList) {
       const { _id, imageUrl, altTxt, name, description } = couchProduct;
       itemsSection.innerHTML += ` 
-        <a href="./product.html?id=${_id}">
+        <a href="front/html/product.html/?id=${_id}">
         <article>
           <img src="${imageUrl}" alt="${altTxt}">
           <h3 class="productName">${name}</h3>
           <p class="productDescription">${description}</p>
         </article>
       </a>
-        `;
+        `;  
     }
   } catch (error) {
     console.log(
