@@ -57,7 +57,8 @@ let getCartProducts = () => {
     );
     console.log(productDetailsList); //productDetailsListe contient la liste de TOUS les objets disponibles
 
-    for (item of cartItemsList) {
+    for (i = 0; i < cartItemsList.length; i++) {
+      const item = cartItemsList[i];
       const { id, color, quantity } = item; //item est une case du tableau cartItemsList, contenant un produit ajouté au panier de type objet w/ propriétés→ id, couleur & quantité
       idProductCart = id;
       colorProductCart = color;
@@ -137,6 +138,7 @@ let getCartProducts = () => {
       let deleteItemActualItemParagraph = document.createElement("p"); //<p deleteItem></p>
       deleteItemActualItemParagraph.classList.add("deleteItem");
       deleteItemActualItemParagraph.textContent = "Supprimer";
+      deleteItemActualItemParagraph.setAttribute("data-index", i);
 
       divCartDeleteItems.appendChild(deleteItemActualItemParagraph); //<div delete> <p deleteItem></p> </div>
 
@@ -158,27 +160,60 @@ let getCartProducts = () => {
       deleteItemButton = deleteItemActualItemParagraph;
       itemArticle = article;
 
-      deleteItemButton.addEventListener("click", () => {
-        let removedItem = removeProducts(item);
-        let newCartList = registerProducts(removedItem);
+      deleteItemButton.addEventListener("click", function () {
+        let deleteButtonDataIndex = cartItemsList.findIndex(
+          (index) => index.id === id && index.color === color
+        );
+        console.log("%c" + deleteButtonDataIndex, "background: green");
+        cartItemsList.splice(deleteButtonDataIndex, 1); //On veut effacer un seul élément qui retourne un tableau
+        console.log(cartItemsList);
 
-        console.log(removedItem);
+        let newCartList = registerProducts(cartItemsList);
+        console.log(cartItemsList, deleteButtonDataIndex);
         console.log(newCartList);
-
         cartItemsElement.removeChild(article);
+
+        totalQuantityProductValue -= quantity;
+        productPrice = price * quantity;
+        totalPriceProductValue -= productPrice;
+        totalQuantityItemsElement.textContent = totalQuantityProductValue;
+        totalPriceItemsElement.textContent =
+          totalPriceProductValue.toLocaleString(undefined, {
+            minimumFractionDigits: 0,
+          });
       });
 
       console.log("Produit du panier" + cartItemsList);
 
-      changeItemQuantityInput.addEventListener("change", (e) => {
-        console.log(
-          "Valeur de l'input = " +
-            e.target.value +
-            " qui est dans le produit avec l'ID: " +
-            itemArticle.getAttribute("data-id") +
-            " de couleur: " +
-            itemArticle.getAttribute("data-color")
+      changeItemQuantityInput.addEventListener("change", function (e) {
+        let changeItemQuantityDataIndex = cartItemsList.findIndex(
+          (index) => index.id === id && index.color === color
         );
+        let itemCart = cartItemsList[changeItemQuantityDataIndex];
+        let newQuantity = Number(e.target.value);
+        let oldQuantity = Number(itemCart.quantity);
+
+        let newPrice = newQuantity * price;
+        let oldPrice = oldQuantity * price;
+
+        totalQuantityProductValue += newQuantity - oldQuantity;
+        console.log(totalQuantityProductValue);
+
+        productPrice = price * quantity;
+
+        totalPriceProductValue += newPrice - oldPrice;
+
+        totalQuantityItemsElement.textContent = totalQuantityProductValue;
+
+        quantityParagraph.textContent = "Qté : " + newQuantity;
+        totalPriceItemsElement.textContent =
+          totalPriceProductValue.toLocaleString(undefined, {
+            minimumFractionDigits: 0,
+          });
+
+        itemCart.quantity = newQuantity;
+        cartItemsList[changeItemQuantityDataIndex] = itemCart;
+        registerProducts(cartItemsList);
       });
       console.groupEnd("Logs de la suppression ou du changement");
       //-----------------------------------------------------------//

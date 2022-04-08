@@ -36,7 +36,7 @@ let verifyProducts = (objectToVerify, arrayOfObjects) => {
 let removeProducts = (objectToRemove) => {
   let listOfProducts = getProducts();
   return listOfProducts.filter(
-    (objectInCart) => objectInCart.id !== objectToRemove.id && objectInCart.color !== objectToRemove.color
+    (objectInCart) => objectInCart.color !== objectToRemove.color && objectInCart.id !== objectToRemove.id
   );
 };
 
