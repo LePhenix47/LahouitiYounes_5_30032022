@@ -2,7 +2,7 @@ let cartItemsElement = document.getElementById("cart__items");
 let totalQuantityItemsElement = document.getElementById("totalQuantity");
 let totalPriceItemsElement = document.getElementById("totalPrice");
 
-let firstNameErrorMessageElement = document.getElementById("firstNameErrorMsg");
+
 
 let cartItemsList = [];
 
@@ -15,6 +15,8 @@ let totalQuantityProductValue = 0;
 let totalPriceProductValue = 0;
 
 let productDetailsList = [];
+
+let arrayOfIds = [];
 
 let changeItemQuantityInput = undefined;
 let deleteItemButton = undefined;
@@ -69,6 +71,9 @@ let getCartProducts = () => {
         //productInCart est le produit FILTRé de type Objet stocké localement AVEC les propriétés → name, imageUrl, altTxt & price
         (content) => content._id === idProductCart
       );
+
+      arrayOfIds.push(id);
+      console.table(arrayOfIds);
 
       console.log(productInCart);
       const { name, imageUrl, altTxt, price } = productInCart;
@@ -239,25 +244,5 @@ Fonction qui:
 2. Change la quantité de produit ( = Qté tot - vieille qté ds localStorage + nouvelle qté entrée dans la page)
 */
 
-/*/
-let changeQuantityOrDeleteItem = () => {
-  deleteItemButton.addEventListener("click", () => {
-    console.log(removeProducts(item));
-    removeProducts(item);
-    cartItemsElement.removeChild(article);
-  });
 
-  console.log("Produit du panier" + cartItemsList);
-
-  changeItemQuantityInput.addEventListener("change", (e) => {
-    console.log(
-      "Valeur de l'input = " +
-        e.target.value +
-        " qui est dans le produit avec l'ID: " +
-        itemArticle.getAttribute("data-id") +
-        " de couleur: " +
-        itemArticle.getAttribute("data-color")
-    );
-  });
-};
-/*/
+   
