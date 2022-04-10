@@ -1,3 +1,3 @@
 let orderIdElement = document.getElementById("orderId");
 
-//orderIdElement.textContent = JSON.parse(resultForm);
+orderIdElement.textContent = JSON.parse(resultForm);

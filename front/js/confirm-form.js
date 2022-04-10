@@ -40,128 +40,175 @@ orderButton.setAttribute("disabled", "true"); //On va l'enlever une fois le cham
 let valueFirstName = "";
 let valueLastName = "";
 
-firstNameElement.addEventListener("input", (e) => {
-  valueFirstName = e.target.value;
-  switch (fullNameREGEX.test(valueFirstName)) {
-    case true:
-      firstNameErrorMessageElement.textContent = "Prénom correct";
-      break;
-
-    case false:
-      firstNameErrorMessageElement.textContent =
-        "Attention, le prénom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
-    default:
-      false;
-  }
-});
-
-lastNameElement.addEventListener("input", (e) => {
-  valueLastName = e.target.value;
-  switch (fullNameREGEX.test(valueLastName)) {
-    case true:
-      lastNameErrorMessageElement.textContent = "Nom correct";
-      break;
-    case false:
-      lastNameErrorMessageElement.textContent =
-        "Attention, le nom saisi est incorrect, veuillez saisir votre nom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
-    default:
-      false;
-  }
-});
-
-addressElement.addEventListener("input", (e) => {
- valueAddress = e.target.value;
-  if(valueAddress === "" || valueAddress === null){
-    addressErrorMessageElement.textContent=  "Veuillez remplir le champ d'adresse";
-  }
- })
-
-cityElement.addEventListener("input", (e) => {
-  cityValue = e.target.value;
-  switch(cityREGEX.test(cityValue)){
-    case true:
-     cityErrorMessageElement.textContent = "Adresse valide";
-      break;
-      case false:
-     cityErrorMessageElement.textContent  = "Attention le champ de la ville est incorrect" ;
-      break;
-     default: false;
-  }
- });
-
-
- emailElement
- .addEventListener("input", (e) => {
-  emailValue  = e.target.value;
-    switch(emailREGEX.test(emailValue)){
+firstNameElement.addEventListener(
+  "input",
+  (isFirstNameValid = () => {
+    valueFirstName = firstNameElement.value;
+    switch (fullNameREGEX.test(valueFirstName)) {
       case true:
-       emailErrorMessageElement.textContent = "Adresse mail valide";
+        firstNameErrorMessageElement.textContent = "Prénom correct";
+        return true;
         break;
-        case false:
-       emailErrorMessageElement.textContent  = "Attention l'adresse mail saisie est invalide" ;
-        break;
-       default: false;
+
+      case false:
+        firstNameErrorMessageElement.textContent =
+          "Attention, le prénom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
+      default:
+        false;
     }
-   }
-   )
+  })
+);
 
-/*
-.addEventListener("input", (e) => {
-   = e.target.value;
-   switch(.test()){
-     case true:
-      .textContent = "";
-       break;
-       case: false:
-      .textContent  = "" ;
-       break;
-      default: false;
-   }
+lastNameElement.addEventListener(
+  "input",
+  (isLastNameValid = () => {
+    valueLastName = lastNameElement.value;
+    switch (fullNameREGEX.test(valueLastName)) {
+      case true:
+        lastNameErrorMessageElement.textContent = "Nom correct";
+        return true;
+        break;
+      case false:
+        lastNameErrorMessageElement.textContent =
+          "Attention, le nom saisi est incorrect, veuillez saisir votre nom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
+        return false;
+        break;
+      default:
+        false;
+    }
+  })
+);
+
+addressElement.addEventListener(
+  "input",
+  (isAddressValid = () => {
+    valueAddress = addressElement.value;
+    if (valueAddress === "" || valueAddress === null) {
+      addressErrorMessageElement.textContent =
+        "Veuillez remplir le champ d'adresse";
+      return false;
+    }
+    addressErrorMessageElement.textContent = "Champ correct";
+    return true;
+  })
+);
+
+cityElement.addEventListener(
+  "input",
+  (isCityValid = () => {
+    cityValue = cityElement.value;
+    switch (cityREGEX.test(cityValue)) {
+      case true:
+        cityErrorMessageElement.textContent = "Adresse valide";
+        return true;
+        break;
+      case false:
+        cityErrorMessageElement.textContent =
+          "Attention le champ de la ville est incorrect";
+        return false;
+        break;
+      default:
+        false;
+    }
+  })
+);
+
+emailElement.addEventListener(
+  "input",
+  (isEmailValid = () => {
+    emailValue = emailElement.value;
+    switch (emailREGEX.test(emailValue)) {
+      case true:
+        emailErrorMessageElement.textContent = "Adresse mail valide";
+        return true;
+        break;
+      case false:
+        emailErrorMessageElement.textContent =
+          "Attention l'adresse mail saisie est invalide";
+        return false;
+        break;
+      default:
+        false;
+    }
+  })
+);
+
+let formFieldsInfosInputted = [
+  isFirstNameValid(),
+  isLastNameValid(),
+  isAddressValid(),
+  isCityValid(),
+  isEmailValid(),
+];
+
+let valid = true;
+
+let isFormValid = () => {
+  for (formField of formFieldsInfosInputted) {
+    valid &= formField;
+    if (!valid) {
+      console.log("%cATTENTION!!!", "background: #970505");
+      break;
+    }
   }
-  )
-*/
-/*/ VERIFICATION du formulaire qui retourne objet contact
+  if (!valid) {
+    console.log(
+      "%cLes infos rentrées sont au mauvais format!!!",
+      "background: #970505"
+    );
+    return false;
+  }
+  if (valid) {
+    console.log(
+      "%cLETSGOOOOOOO! Les infos rentrées sont correctes!!",
+      "background: #15DEA5"
+    );
 
+    return true;
+  }
+};
+isFormValid();
+
+// VERIFICATION du formulaire qui retourne objet contact
 let sendVerfiedFormInfos = () => {
-  if([expression qui permet de vérifier que tous les patterns REGEX respectifs sont respectés]){
-  orderButton.removeAttribute("disabled");
-  return new contactInfo(valueFirstName, valueLastName, valueAdress, valueCity, valueEmail); 
+  if (isFormValid()) {
+    console.log("%cFormulaire validé", "background: #15DEA5");
+    orderButton.removeAttribute("disabled");
+    return new contactInfo(
+      valueFirstName,
+      valueLastName,
+      valueAdress,
+      valueCity,
+      valueEmail
+    );
+  }
+  console.error("Le formulaire n'est pas valide");
+};
+
+//ENVOI du formulaire
+let resultForm = "";
+let contactObject = sendVerfiedFormInfos();
+
+let sendProductsInCartToConfirm = async () => {
+  try {
+    let response = await fetch(urlProductsAPI + "order", {
+      method: "POST",
+      header: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(contactObject, arrayOfIds),
+    });
+    resultForm = await response.json();
+    window.location.href = "./confirmation.html";
+  } catch (error) {
+    console.error(error);
   }
 };
 
-/*/
-
-/*/ ENVOI du formulaire
-
-let resultForm = '';
-let contactObject = sendVerfiedFormInfos();
-
-let sendProductsInCartToConfirm = async () =>{
-    try{
-       let response = await fetch(urlProductsAPI + "order",{
-     method: "POST",
-     header:{
-         'Accept': 'application/json'
-         'Content-Type': 'application/json'
-     },
-
-     body: JSON.stringify(contactObject, arrayOfIds)
-       }
-      )
-
-      resultForm = response.json();
-
-       window.location.href = "./confirmation.html";
- ;
-
-    }catch(error){
-        console.error(error);
-    }
-}
-   CLICK sur le bouton "Confirmer"
-orderButton.addEventListener("submit", function(e){
+//   CLICK sur le bouton "Confirmer"
+orderButton.addEventListener("submit", function (e) {
   sendProductsInCartToConfirm();
   e.preventDefault();
- 
-}
-/*/
+});
