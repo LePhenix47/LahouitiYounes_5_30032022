@@ -1,17 +1,22 @@
 let firstNameElement = document.getElementById("firstName");
 let firstNameErrorMessageElement = document.getElementById("firstNameErrorMsg");
+let firstNameElementValid = false;
 
 let lastNameElement = document.getElementById("lastName");
 let lastNameErrorMessageElement = document.getElementById("lastNameErrorMsg");
+let lastNameElementValid = false;
 
 let addressElement = document.getElementById("address");
 let addressErrorMessageElement = document.getElementById("addressErrorMsg");
+let addressElementValid = false;
 
 let cityElement = document.getElementById("city");
 let cityErrorMessageElement = document.getElementById("cityErrorMsg");
+let cityElementValid = false;
 
 let emailElement = document.getElementById("email");
 let emailErrorMessageElement = document.getElementById("emailErrorMsg");
+let emailElementValid = false;
 
 let orderButton = document.getElementById("order");
 //let formFields = document.querySelectorAll(".cart__order__form input"); //tab[]
@@ -40,22 +45,16 @@ let valueFirstName = "";
 let valueLastName = "";
 
 firstNameElement.addEventListener(
-  "input",
-  (isFirstNameValid = () => {
+  "input", () => {
     valueFirstName = firstNameElement.value;
-    switch (fullNameREGEX.test(valueFirstName)) {
-      case true:
-        firstNameErrorMessageElement.textContent = "Prénom correct";
-        return true;
-        break;
-
-      case false:
-        firstNameErrorMessageElement.textContent =
+    firstNameElementValid = fullNameREGEX.test(valueFirstName);
+    if (firstNameElementValid) {
+      firstNameErrorMessageElement.textContent =
           "Attention, le prénom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
-      default:
-        false;
+    }else{
+       firstNameErrorMessageElement.textContent = "Prénom correct";
     }
-  })
+  }
 );
 
 lastNameElement.addEventListener(
@@ -141,6 +140,10 @@ let formFieldsInfosInputted = [
 ];
 
 let valid = true;
+
+const formIsValid = () =>{
+ return firstNameElementValid && lastNameElementValid  && addressElementValid && cityElementValid && emailElementValid;
+}
 
 let isFormValid = () => {
   for (formField of formFieldsInfosInputted) {
