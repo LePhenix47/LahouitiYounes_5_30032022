@@ -14,7 +14,7 @@ let emailElement = document.getElementById("email");
 let emailErrorMessageElement = document.getElementById("emailErrorMsg");
 
 let orderButton = document.getElementById("order");
-let formFields = document.querySelectorAll(".cart__order__form input"); //tab[]
+//let formFields = document.querySelectorAll(".cart__order__form input"); //tab[]
 
 let fullNameREGEX = /^([A-Z]{1})([a-z]){1,20}$|^([A-Z]){2,20}$/;
 
@@ -23,7 +23,6 @@ let cityREGEX = /^([a-z A-Z -]+)$/;
 let emailREGEX =
   /^([a-z A-Z 0-9\.-]+)@([a-z A-Z 0-9]+).([a-z]{2,8})(.[a-z]{2,8})?$/;
 
-let inputValidity = false;
 //********--------------------Classe pour créer des objects de contact--------------------********//
 class contactInfo {
   constructor(firstName, lastName, address, city, email) {
@@ -167,7 +166,7 @@ let isFormValid = () => {
     return true;
   }
 };
-isFormValid();
+
 
 // VERIFICATION du formulaire qui retourne objet contact
 let sendVerfiedFormInfos = () => {
@@ -184,6 +183,7 @@ let sendVerfiedFormInfos = () => {
   }
   console.error("Le formulaire n'est pas valide");
 };
+
 
 //ENVOI du formulaire
 let resultForm = "";
