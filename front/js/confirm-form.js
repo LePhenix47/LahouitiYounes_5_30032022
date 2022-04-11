@@ -85,7 +85,7 @@ cityElement.addEventListener("input", () => {
   cityElementValid = cityREGEX.test(valueCity);
   if (!cityElementValid) {
     cityErrorMessageElement.textContent =
-      "Attention, veuillez saisir une ville qu'avec des tirets '-' ou des points '.' ";
+      "Attention, veuillez saisir une ville";
   } else {
     cityErrorMessageElement.textContent = "Ville valide";
   }
@@ -102,22 +102,8 @@ emailElement.addEventListener("input", () => {
   }
 });
 
-/*
 
-.addEventListener("input", ()=>{
-   = .value;
-   =  REGEX.test();
-   if(){
-         .textContent = "";
-   }else{
-         .textContent = "";
-   }
-
-})
-*/
-
-let valid = true;
-
+//Verifie si tous les champs sont corrects
 const formIsValid = () => {
   return (
     firstNameElementValid &&
@@ -126,18 +112,6 @@ const formIsValid = () => {
     cityElementValid &&
     emailElementValid
   );
-};
-
-let enableOrderButton = () => {
-  if (formIsValid) {
-    orderButton.removeAttribute("disabled");
-    console.log(
-      "%cPARFAIT MON REUF!!! Le formulaire est valide → Bouton marche",
-      "background: #15DEA5; color: black;"
-    );
-  } else {
-    console.error("CATASTROPHE!!!! Le formulaire n'a pas été envoyé");
-  }
 };
 
 //VERIFIE si tous les champs de formulaire sont saisis
