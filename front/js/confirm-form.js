@@ -169,12 +169,12 @@ let sendProductsInCartToConfirm = async () => {
         "Content-Type": "application/json",
       },
 
-      body: JSON.stringify({ contact: contactObject, produits: arrayOfIds }),
+      body: JSON.stringify({ contact: contactObject, produits: arrayOfIds}),
     });
     resultForm = await response.json();
     if (response.ok) {
-      console.log("Résultat du formualire %d",resultForm);
-      window.location.href = "./confirmation.html";
+      console.log("Résultat du formulaire %d",resultForm);
+      window.location.href = "./confirmation.html/" + resultForm;
     }else{
       alert("Erreur, statut code de la réponse: " + response.status);
       console.log("%cERREUR: STATUT " + response.status, "background: crimson; font-size: 24px;")
