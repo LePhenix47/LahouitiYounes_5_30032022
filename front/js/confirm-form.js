@@ -164,21 +164,20 @@ let sendProductsInCartToConfirm = async () => {
   try {
     let response = await fetch(urlProductsAPI + "order", {
       method: "POST",
-      header: {
+      headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ contact: contactObject, produits: arrayOfIds }),
+      body: JSON.stringify({ contact: contactObject, products: arrayOfIds }),
     });
 
     resultForm = await response.json();
     if (response.ok) {
-      alert(
-        "Code statu %d Methode POST a bien marché, redirection...",
-        response.status
-      );
-      console.log("Résultat du formulaire %d", resultForm);
-      window.location.href = "./confirmation.html/" + resultForm;
+      alert("Code statut: " + response.status + " ,redirection...");
+
+      console.log("Résultat du formulaire: " + resultForm);
+
+      window.location.href = "./confirmation.html?id=" + resultForm.orderId;
     } else {
       alert("Erreur, statut code de la réponse: " + response.status);
       console.log(
