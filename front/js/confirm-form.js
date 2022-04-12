@@ -144,7 +144,7 @@ let isFormFilled = () => {
 // VERIFICATION du formulaire qui retourne objet contact
 let sendVerfiedFormInfos = () => {
   if (formIsValid) {
-    console.log("%cFormulaire validé", "background: #15DEA5; color: black;");
+    console.log("%cObjet contact crée", "background: #15DEA5; color: black;");
     return new contactInfo(
       valueFirstName,
       valueLastName,
@@ -165,17 +165,19 @@ let sendProductsInCartToConfirm = async () => {
     let response = await fetch(urlProductsAPI + "order", {
       method: "POST",
       header: {
-        'Accept': "application/json",
+        "Accept": "application/json",
         "Content-Type": "application/json",
       },
 
       body: JSON.stringify({ contact: contactObject, produits: arrayOfIds }),
     });
     resultForm = await response.json();
-    if (resultForm) {
+    if (response.ok) {
+      console.log("Résultat du formualire %d",resultForm);
       window.location.href = "./confirmation.html";
     }else{
-      alert("Erreur" + resultForm.status);
+      alert("Erreur, statut code de la réponse: " + response.status);
+      console.log("%cERREUR: STATUT " + response.status, "background: crimson; font-size: 24px;")
     }
   } catch (error) {
     console.error(error);
