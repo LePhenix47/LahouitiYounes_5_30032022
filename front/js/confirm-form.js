@@ -21,7 +21,7 @@ let emailElementValid = false;
 let orderButton = document.getElementById("order");
 let formFields = document.querySelectorAll(".cart__order__form input"); //tab[]
 
-let fullNameREGEX = /^([A-Z]{1})([a-z]){1,20}$|^([A-Z]){2,20}$/;
+let fullNameREGEX = /^([A-Z]{1})([a-z]){1,20}( +)?$|^([A-Z]){2,20}( )?$/;
 
 let cityREGEX = /^([a-z A-Z \.-]+)$/;
 
@@ -54,7 +54,6 @@ firstNameElement.addEventListener("input", () => {
     firstNameErrorMessageElement.textContent =
       "Attention, le prénom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
   } else {
-    firstNameErrorMessageElement.textContent = "Prénom correct";
     console.log(valueFirstName);
   }
   isFormFilled();
@@ -67,7 +66,6 @@ lastNameElement.addEventListener("input", () => {
     lastNameErrorMessageElement.textContent =
       "Attention, le nom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
   } else {
-    lastNameErrorMessageElement.textContent = "Nom correct";
     console.log(valueLastName);
   }
   isFormFilled();
@@ -79,7 +77,6 @@ addressElement.addEventListener("input", () => {
     addressErrorMessageElement.textContent =
       "Attention, veuillez saisir une adresse qu'avec des tirets '-' ou des points '.' ";
   } else {
-    addressErrorMessageElement.textContent = "Adresse valide";
     addressElementValid = true;
     console.log(valueAddress);
   }
@@ -93,7 +90,6 @@ cityElement.addEventListener("input", () => {
     cityErrorMessageElement.textContent =
       "Attention, veuillez saisir une ville";
   } else {
-    cityErrorMessageElement.textContent = "Ville valide";
     console.log(valueCity);
   }
   isFormFilled();
@@ -106,7 +102,6 @@ emailElement.addEventListener("input", () => {
     emailErrorMessageElement.textContent =
       "Attention! L'email rentré est invalide";
   } else {
-    emailErrorMessageElement.textContent = "Email correct";
     console.log(valueEmail);
   }
   isFormFilled();
@@ -153,7 +148,7 @@ let sendVerfiedFormInfos = () => {
       valueEmail
     );
   }
-  console.error("Le formulaire n'est pas valide");
+  console.error("Le formulaire n'est pas valide → Objet non crée");
 };
 
 //ENVOI du formulaire
@@ -165,7 +160,7 @@ let sendProductsInCartToConfirm = async () => {
     let response = await fetch(urlProductsAPI + "order", {
       method: "POST",
       headers: {
-        "Accept": "application/json",
+        "Accept" : "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ contact: contactObject, products: arrayOfIds }),
@@ -173,7 +168,7 @@ let sendProductsInCartToConfirm = async () => {
 
     resultForm = await response.json();
     if (response.ok) {
-      alert("Code statut: " + response.status + " ,redirection...");
+      alert("Code statut: " + response.status + ", redirection...");
 
       console.log("Résultat du formulaire: " + resultForm);
 
@@ -190,17 +185,27 @@ let sendProductsInCartToConfirm = async () => {
   }
 };
 
+let articlesInCart = getProducts();
+let amountOfArticlesInCart = articlesInCart.length;
 //   CLICK sur le bouton "Confirmer"
 orderButton.addEventListener("click", function (e) {
   e.preventDefault();
-  if (formIsValid()) {
+  if (formIsValid() && amountOfArticlesInCart > 0 && amountOfDeletedItems < amountOfArticlesInCart) {
     contactObject = sendVerfiedFormInfos();
     console.log(contactObject);
     console.log("URL: ", urlProductsAPI);
     sendProductsInCartToConfirm();
     alert("Formulaire envoyé");
-  } else {
-    alert("ATTENTION!!!! Des champs de formulaire ne sont pas valides");
+  }
+ else if (amountOfArticlesInCart <= 0 || amountOfDeletedItems >= amountOfArticlesInCart) {
+    alert("Votre panier est vide, veuillez remplir votre panier");
+    console.log("Non envoyé car panier vide");
+  }
+  else if (!formIsValid()) {
+    alert("ATTENTION!!!! Des champs de formulaire ne sont pas valides ou");
     console.error("Form pas valide → champ incomplet ou incorrect");
+  }
+  else{
+    console.error("ERREUR le formulaire n'est pas valide")
   }
 });

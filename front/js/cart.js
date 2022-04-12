@@ -2,8 +2,6 @@ let cartItemsElement = document.getElementById("cart__items");
 let totalQuantityItemsElement = document.getElementById("totalQuantity");
 let totalPriceItemsElement = document.getElementById("totalPrice");
 
-
-
 let cartItemsList = [];
 
 let idProductCart = "";
@@ -21,6 +19,8 @@ let arrayOfIds = [];
 let changeItemQuantityInput = undefined;
 let deleteItemButton = undefined;
 let itemArticle = undefined;
+
+let amountOfDeletedItems = 0;
 
 console.groupCollapsed("Dans la fonction getCartProducts");
 
@@ -49,26 +49,29 @@ getProductDetails();
 
 console.groupEnd("Dans la fonction getProductDetails");
 
+
+
+
 let getCartProducts = () => {
   try {
-    cartItemsList = getProducts(); //cartItemsList est la liste des produits stockés localement
+    cartItemsList = getProducts(); 
 
     console.log(
       "%cListe de TOUS nos produits fetchés par l'API:",
       "background: orange; color: black;"
     );
-    console.log(productDetailsList); //productDetailsListe contient la liste de TOUS les objets disponibles
+    console.log(productDetailsList);
 
     for (i = 0; i < cartItemsList.length; i++) {
       const item = cartItemsList[i];
-      const { id, color, quantity } = item; //item est une case du tableau cartItemsList, contenant un produit ajouté au panier de type objet w/ propriétés→ id, couleur & quantité
+      const { id, color, quantity } = item; 
       idProductCart = id;
       colorProductCart = color;
       quantityProductCart = quantity;
-      //On stocke globalement ces valeurs
+      
 
       const productInCart = productDetailsList.find(
-        //productInCart est le produit FILTRé de type Objet stocké localement AVEC les propriétés → name, imageUrl, altTxt & price
+       
         (content) => content._id === idProductCart
       );
 
@@ -84,6 +87,14 @@ let getCartProducts = () => {
       );
 
       //---------------------------Création liste pproduits du panier--------------------------------//
+
+      /*
+      Cette fonction permet 
+      //cartItemsList est la liste des produits stockés localement
+       //productDetailsListe contient la liste de TOUS les objets disponibles
+       //item est une case du tableau cartItemsList, contenant un produit ajouté au panier de type objet w/ propriétés→ id, couleur & quantité
+        //productInCart est le produit FILTRé de type Objet stocké localement AVEC les propriétés → name, imageUrl, altTxt & price
+      */
       let article = document.createElement("article"); //<article>
       article.classList.add("cart__item");
       article.setAttribute("data-id", id);
@@ -170,14 +181,14 @@ let getCartProducts = () => {
           (index) => index.id === id && index.color === color
         );
         console.log("%c" + deleteButtonDataIndex, "background: green");
-        cartItemsList.splice(deleteButtonDataIndex, 1); //On veut effacer un seul élément qui retourne un tableau
+        cartItemsList.splice(deleteButtonDataIndex, 1);
         console.log(cartItemsList);
 
         let newCartList = registerProducts(cartItemsList);
         console.log(cartItemsList, deleteButtonDataIndex);
         console.log(newCartList);
         cartItemsElement.removeChild(article);
-
+        amountOfDeletedItems++;
         totalQuantityProductValue -= quantity;
         productPrice = price * quantity;
         totalPriceProductValue -= productPrice;
@@ -197,28 +208,32 @@ let getCartProducts = () => {
         let itemCart = cartItemsList[changeItemQuantityDataIndex];
         let newQuantity = Number(e.target.value);
         let oldQuantity = Number(itemCart.quantity);
+        //-----------------------------------------------------------
+        if (newQuantity > 0) {
+          let newPrice = newQuantity * price;
+          let oldPrice = oldQuantity * price;
 
-        let newPrice = newQuantity * price;
-        let oldPrice = oldQuantity * price;
+          totalQuantityProductValue += newQuantity - oldQuantity;
+          console.log(totalQuantityProductValue);
 
-        totalQuantityProductValue += newQuantity - oldQuantity;
-        console.log(totalQuantityProductValue);
+          productPrice = price * quantity;
 
-        productPrice = price * quantity;
+          totalPriceProductValue += newPrice - oldPrice;
 
-        totalPriceProductValue += newPrice - oldPrice;
+          totalQuantityItemsElement.textContent = totalQuantityProductValue;
 
-        totalQuantityItemsElement.textContent = totalQuantityProductValue;
+          quantityParagraph.textContent = "Qté : " + newQuantity;
+          totalPriceItemsElement.textContent =
+            totalPriceProductValue.toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+            });
 
-        quantityParagraph.textContent = "Qté : " + newQuantity;
-        totalPriceItemsElement.textContent =
-          totalPriceProductValue.toLocaleString(undefined, {
-            minimumFractionDigits: 0,
-          });
-
-        itemCart.quantity = newQuantity;
-        cartItemsList[changeItemQuantityDataIndex] = itemCart;
-        registerProducts(cartItemsList);
+          itemCart.quantity = newQuantity;
+          cartItemsList[changeItemQuantityDataIndex] = itemCart;
+          registerProducts(cartItemsList);
+        } else {
+          newQuantity = oldQuantity;
+        }
       });
       console.groupEnd("Logs de la suppression ou du changement");
       //-----------------------------------------------------------//
@@ -230,19 +245,9 @@ let getCartProducts = () => {
         totalPriceProductValue.toLocaleString(undefined, {
           minimumFractionDigits: 0,
         });
-      //[element].toLocaleString(undefined, { minimumFractionDigits: 0 }) pour rendre: 23790€ → 23 790€
     }
   } catch (error) {
     console.error(error);
   }
 };
 
-//--------------------------------------------------------------
-/*
-Fonction qui:
-1. Enlève le produit du panier ( + l'enlève dans le localStorage )
-2. Change la quantité de produit ( = Qté tot - vieille qté ds localStorage + nouvelle qté entrée dans la page)
-*/
-
-
-   
