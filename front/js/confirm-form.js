@@ -64,7 +64,7 @@ lastNameElement.addEventListener("input", () => {
   valueLastName = lastNameElement.value;
   lastNameElementValid = fullNameREGEX.test(valueLastName);
   if (!lastNameElementValid || valueLastName === "") {
-    firstNameErrorMessageElement.textContent =
+    lastNameErrorMessageElement.textContent =
       "Attention, le nom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
   } else {
     lastNameErrorMessageElement.textContent = "Nom correct";
@@ -165,16 +165,18 @@ let sendProductsInCartToConfirm = async () => {
     let response = await fetch(urlProductsAPI + "order", {
       method: "POST",
       header: {
-        Accept: "application/json",
+        'Accept': "application/json",
         "Content-Type": "application/json",
       },
 
-      body: JSON.stringify(contactObject, arrayOfIds),
+      body: JSON.stringify({ contact: contactObject, produits: arrayOfIds }),
     });
     resultForm = await response.json();
-    let goToOrderPage = window.location.href;
-    goToOrderPage = "./confirmation.html/";
-    goToOrderPage = await resultForm;
+    if (resultForm) {
+      window.location.href = "./confirmation.html";
+    }else{
+      alert("Erreur" + resultForm.status);
+    }
   } catch (error) {
     console.error(error);
   }
@@ -186,7 +188,7 @@ orderButton.addEventListener("click", function (e) {
   if (formIsValid()) {
     contactObject = sendVerfiedFormInfos();
     sendProductsInCartToConfirm();
-    alert("Formulaire enovyé");
+    alert("Formulaire envoyé");
   } else {
     alert("ATTENTION!!!! Des champs de formulaire ne sont pas valides");
     console.error("Form pas valide → champ incomplet ou incorrect");
