@@ -168,16 +168,23 @@ let sendProductsInCartToConfirm = async () => {
         "Accept": "application/json",
         "Content-Type": "application/json",
       },
-
-      body: JSON.stringify({ contact: contactObject, produits: arrayOfIds}),
+      body: JSON.stringify({ contact: contactObject, produits: arrayOfIds }),
     });
+
     resultForm = await response.json();
     if (response.ok) {
-      console.log("Résultat du formulaire %d",resultForm);
+      alert(
+        "Code statu %d Methode POST a bien marché, redirection...",
+        response.status
+      );
+      console.log("Résultat du formulaire %d", resultForm);
       window.location.href = "./confirmation.html/" + resultForm;
-    }else{
+    } else {
       alert("Erreur, statut code de la réponse: " + response.status);
-      console.log("%cERREUR: STATUT " + response.status, "background: crimson; font-size: 24px;")
+      console.log(
+        "%cERREUR: STATUT " + response.status,
+        "background: crimson; font-size: 24px;"
+      );
     }
   } catch (error) {
     console.error(error);
@@ -189,6 +196,8 @@ orderButton.addEventListener("click", function (e) {
   e.preventDefault();
   if (formIsValid()) {
     contactObject = sendVerfiedFormInfos();
+    console.log(contactObject);
+    console.log("URL: ", urlProductsAPI);
     sendProductsInCartToConfirm();
     alert("Formulaire envoyé");
   } else {
