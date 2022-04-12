@@ -21,7 +21,7 @@ let emailElementValid = false;
 let orderButton = document.getElementById("order");
 let formFields = document.querySelectorAll(".cart__order__form input"); //tab[]
 
-let fullNameREGEX = /^([A-Z]{1})([a-z]){1,20}( +)?$|^([A-Z]){2,20}( )?$/;
+let fullNameREGEX = /^([A-Z]{1})([a-z]){1,20}( +)?$|^([A-Z]){2,20}( +)?$/;
 
 let cityREGEX = /^([a-z A-Z \.-]+)$/;
 
