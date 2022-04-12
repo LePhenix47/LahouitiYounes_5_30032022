@@ -43,65 +43,74 @@ orderButton.setAttribute("disabled", "true"); //On va l'enlever une fois le cham
 
 let valueFirstName = "";
 let valueLastName = "";
-let valueAdress = "";
+let valueAddress = "";
 let valueCity = "";
 let valueEmail = "";
 
 firstNameElement.addEventListener("input", () => {
   valueFirstName = firstNameElement.value;
   firstNameElementValid = fullNameREGEX.test(valueFirstName);
-  if (!firstNameElementValid) {
+  if (!firstNameElementValid || valueFirstName === "") {
     firstNameErrorMessageElement.textContent =
       "Attention, le prénom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
   } else {
     firstNameErrorMessageElement.textContent = "Prénom correct";
+    console.log(valueFirstName);
   }
+  isFormFilled();
 });
 
 lastNameElement.addEventListener("input", () => {
-  valueLastName = firstNameElement.value;
+  valueLastName = lastNameElement.value;
   lastNameElementValid = fullNameREGEX.test(valueLastName);
-  if (!lastNameElementValid) {
+  if (!lastNameElementValid || valueLastName === "") {
     firstNameErrorMessageElement.textContent =
       "Attention, le nom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
   } else {
     lastNameErrorMessageElement.textContent = "Nom correct";
+    console.log(valueLastName);
   }
+  isFormFilled();
 });
 
 addressElement.addEventListener("input", () => {
-  valueAdress = addressElement.value;
-  if (valueAdress === "") {
+  valueAddress = addressElement.value;
+  if (valueAddress === "") {
     addressErrorMessageElement.textContent =
       "Attention, veuillez saisir une adresse qu'avec des tirets '-' ou des points '.' ";
   } else {
     addressErrorMessageElement.textContent = "Adresse valide";
     addressElementValid = true;
+    console.log(valueAddress);
   }
+  isFormFilled();
 });
 
 cityElement.addEventListener("input", () => {
   valueCity = cityElement.value;
   cityElementValid = cityREGEX.test(valueCity);
-  if (!cityElementValid) {
+  if (!cityElementValid || valueCity === "") {
     cityErrorMessageElement.textContent =
       "Attention, veuillez saisir une ville";
   } else {
     cityErrorMessageElement.textContent = "Ville valide";
+    console.log(valueCity);
   }
+  isFormFilled();
 });
 
 emailElement.addEventListener("input", () => {
   valueEmail = emailElement.value;
   emailElementValid = emailREGEX.test(valueEmail);
-  if (!emailElementValid) {
+  if (!emailElementValid || valueEmail === "") {
     emailErrorMessageElement.textContent =
       "Attention! L'email rentré est invalide";
   } else {
     emailErrorMessageElement.textContent = "Email correct";
+    console.log(valueEmail);
   }
+  isFormFilled();
 });
-
 
 //Verifie si tous les champs sont corrects
 const formIsValid = () => {
@@ -127,7 +136,8 @@ let isFormFilled = () => {
     orderButton.removeAttribute("disabled");
     console.log("Les champs sont remplis → Bouton 'Commander' activé");
   } else {
-    console.log("Il y a " + notFilledField + " champ(s) rempli(s)");
+    console.log("Il y a encore " + notFilledField + " champ(s) NON rempli(s)");
+    orderButton.setAttribute("disabled", "true");
   }
 };
 
@@ -138,7 +148,7 @@ let sendVerfiedFormInfos = () => {
     return new contactInfo(
       valueFirstName,
       valueLastName,
-      valueAdress,
+      valueAddress,
       valueCity,
       valueEmail
     );
@@ -148,7 +158,7 @@ let sendVerfiedFormInfos = () => {
 
 //ENVOI du formulaire
 let resultForm = "";
-let contactObject = sendVerfiedFormInfos();
+let contactObject = "";
 
 let sendProductsInCartToConfirm = async () => {
   try {
@@ -162,16 +172,19 @@ let sendProductsInCartToConfirm = async () => {
       body: JSON.stringify(contactObject, arrayOfIds),
     });
     resultForm = await response.json();
-    window.location.href = "./confirmation.html";
+    let goToOrderPage = window.location.href;
+    goToOrderPage = "./confirmation.html/";
+    goToOrderPage = await resultForm;
   } catch (error) {
     console.error(error);
   }
 };
 
 //   CLICK sur le bouton "Confirmer"
-orderButton.addEventListener("submit", function (e) {
+orderButton.addEventListener("click", function (e) {
   e.preventDefault();
   if (formIsValid()) {
+    contactObject = sendVerfiedFormInfos();
     sendProductsInCartToConfirm();
     alert("Formulaire enovyé");
   } else {
