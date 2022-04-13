@@ -21,7 +21,7 @@ let emailElementValid = false;
 let orderButton = document.getElementById("order");
 let formFields = document.querySelectorAll(".cart__order__form input"); //tab[]
 
-let fullNameREGEX = /^([A-ZÀ-ÖØ-Ý]{1})([a-zà-öø-ÿ]){1,20}( +)?$|^([A-Za-zÀ-ÖØ-Ý]+){2,20}( +)?$/;
+let fullNameREGEX = /^([A-ZÀ-ÖØ-Ý]{1})([a-zà-öø-ÿ]){1,20}( +)?$|^([A-ZÀ-ÖØ-Ý]){2,20}( +)?$/;
 
 let cityREGEX = /^([a-z A-Z \.-]+)$/;
 
@@ -54,6 +54,7 @@ firstNameElement.addEventListener("input", () => {
     firstNameErrorMessageElement.textContent =
       "Attention, le prénom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
   } else {
+    firstNameErrorMessageElement.textContent = "";
     console.log(valueFirstName);
   }
   isFormFilled();
@@ -66,6 +67,7 @@ lastNameElement.addEventListener("input", () => {
     lastNameErrorMessageElement.textContent =
       "Attention, le nom saisi est incorrect, veuillez saisir votre prénom soit avec la première lettre en majuscule avec le reste en minuscule soit tout en majuscule";
   } else {
+    lastNameErrorMessageElement.textContent = "";
     console.log(valueLastName);
   }
   isFormFilled();
@@ -77,6 +79,7 @@ addressElement.addEventListener("input", () => {
     addressErrorMessageElement.textContent =
       "Attention, veuillez saisir une adresse qu'avec des tirets '-' ou des points '.' ";
   } else {
+    addressErrorMessageElement.textContent = "";
     addressElementValid = true;
     console.log(valueAddress);
   }
@@ -90,6 +93,7 @@ cityElement.addEventListener("input", () => {
     cityErrorMessageElement.textContent =
       "Attention, veuillez saisir une ville";
   } else {
+    cityErrorMessageElement.textContent = "";
     console.log(valueCity);
   }
   isFormFilled();
@@ -102,6 +106,7 @@ emailElement.addEventListener("input", () => {
     emailErrorMessageElement.textContent =
       "Attention! L'email rentré est invalide";
   } else {
+    emailErrorMessageElement.textContent = "";
     console.log(valueEmail);
   }
   isFormFilled();
@@ -169,9 +174,7 @@ let sendProductsInCartToConfirm = async () => {
     resultForm = await response.json();
     if (response.ok) {
       alert("Code statut: " + response.status + ", redirection...");
-
       console.log("Résultat du formulaire: " + resultForm);
-
       window.location.href = "./confirmation.html?id=" + resultForm.orderId;
     } else {
       alert("Erreur, statut code de la réponse: " + response.status);
@@ -202,7 +205,7 @@ orderButton.addEventListener("click", function (e) {
     console.log("Non envoyé car panier vide");
   }
   else if (!formIsValid()) {
-    alert("ATTENTION!!!! Des champs de formulaire ne sont pas valides ou");
+    alert("ATTENTION!!!! Des champs de formulaire ne sont pas valides");
     console.error("Form pas valide → champ incomplet ou incorrect");
   }
   else{

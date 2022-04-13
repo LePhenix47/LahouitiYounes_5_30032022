@@ -49,12 +49,120 @@ getProductDetails();
 
 console.groupEnd("Dans la fonction getProductDetails");
 
+let addIdsInArray = (id) => {
+  arrayOfIds.push(id);
+  console.table(arrayOfIds);
+};
 
+let addCartItemsInHTML = (
+  id,
+  color,
+  quantity,
+  name,
+  imageUrl,
+  altTxt,
+  price
+) => {
+  let article = document.createElement("article"); //<article>
+  article.classList.add("cart__item");
+  article.setAttribute("data-id", id);
+  article.setAttribute("data-color", color);
 
+  let divItemImage = document.createElement("div");
+  divItemImage.classList.add("cart__item__img");
+
+  let itemImage = document.createElement("img");
+  itemImage.setAttribute("src", imageUrl);
+  itemImage.setAttribute("alt", altTxt);
+
+  divItemImage.appendChild(itemImage); //<div item__img> <img/> </div>
+
+  let divItemContent = document.createElement("div"); //<div content> </div>
+  divItemContent.classList.add("cart__item__content");
+
+  let divItemDescription = document.createElement("div"); //<div description> </div>
+  divItemDescription.classList.add("cart__item__content__description");
+
+  let itemNameHeading2 = document.createElement("h2"); //<h2></h2>
+  itemNameHeading2.textContent = name;
+
+  let itemColorParagraph = document.createElement("p"); //<p color></p>
+  itemColorParagraph.textContent = "Couleur: " + color;
+
+  let itemPriceParagraph = document.createElement("p"); //<p price></p>
+  itemPriceParagraph.textContent = "Prix à l'unité: " + price + " €";
+
+  divItemDescription.appendChild(itemNameHeading2); // <div description> <h2></h2> </div>
+  divItemDescription.appendChild(itemColorParagraph); //  <div description> <h2></h2> <p color></p></div>
+  divItemDescription.appendChild(itemPriceParagraph); //  <div description> <h2></h2> <p color></p>  <p price></p> </div>
+
+  let divItemSettings = document.createElement("div"); //<div settings></div>
+  divItemSettings.classList.add("cart__item__content__settings");
+
+  let divItemQuantity = document.createElement("div"); //<div quantity></div>
+  divItemQuantity.classList.add("cart__item__content__settings__quantity");
+
+  let quantityParagraph = document.createElement("p"); // <p quantité>${quantity}</p>
+  quantityParagraph.textContent = "Qté : " + quantity;
+
+  let numberOfProductsInput = document.createElement("input");
+  numberOfProductsInput.classList.add("itemQuantity");
+  numberOfProductsInput.setAttribute("type", "number");
+  numberOfProductsInput.setAttribute("name", "itemQuantity");
+  numberOfProductsInput.setAttribute("min", "1");
+  numberOfProductsInput.setAttribute("max", "100");
+  numberOfProductsInput.setAttribute("value", quantity); //<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantity}">
+
+  divItemQuantity.appendChild(quantityParagraph); //<div quantity> <p quantité>${quantity}</p> </div>
+  divItemQuantity.appendChild(numberOfProductsInput); //<div quantity> <p quantité>${quantity}</p> <input/></div>
+
+  let divCartDeleteItems = document.createElement("div"); //<div delete></div>
+  divCartDeleteItems.classList.add("cart__item__content__settings__delete");
+
+  let deleteActualItemParagraph = document.createElement("p"); //<p deleteItem></p>
+  deleteActualItemParagraph.classList.add("deleteItem");
+  deleteActualItemParagraph.textContent = "Supprimer";
+  deleteActualItemParagraph.setAttribute("data-index", i);
+
+  divCartDeleteItems.appendChild(deleteActualItemParagraph); //<div delete> <p deleteItem></p> </div>
+
+  divItemSettings.appendChild(divItemQuantity);
+  divItemSettings.appendChild(divCartDeleteItems);
+
+  divItemContent.appendChild(divItemDescription);
+  divItemContent.appendChild(divItemSettings);
+
+  article.appendChild(divItemImage);
+  article.appendChild(divItemContent);
+
+  cartItemsElement.appendChild(article);
+
+  changeItemQuantityInput = numberOfProductsInput;
+  deleteItemButton = deleteActualItemParagraph;
+  itemArticle = article;
+};
+
+let computeTotalPriceAndQuantity = (price, quantity)=>{
+  totalQuantityProductValue += quantity;
+      productPrice = price * quantity;
+      totalPriceProductValue += productPrice;
+      totalQuantityItemsElement.textContent =
+        totalQuantityProductValue.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+        });
+      totalPriceItemsElement.textContent =
+        totalPriceProductValue.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+        });
+}
+
+let computeNewPriceAndQuantity = (newQuantity, oldQuantity, price)=>{
+
+}
 
 let getCartProducts = () => {
   try {
-    cartItemsList = getProducts(); 
+    cartItemsList = getProducts();
 
     console.log(
       "%cListe de TOUS nos produits fetchés par l'API:",
@@ -64,19 +172,16 @@ let getCartProducts = () => {
 
     for (i = 0; i < cartItemsList.length; i++) {
       const item = cartItemsList[i];
-      const { id, color, quantity } = item; 
+      const { id, color, quantity } = item;
       idProductCart = id;
       colorProductCart = color;
       quantityProductCart = quantity;
-      
 
       const productInCart = productDetailsList.find(
-       
         (content) => content._id === idProductCart
       );
 
-      arrayOfIds.push(id);
-      console.table(arrayOfIds);
+      addIdsInArray(id);
 
       console.log(productInCart);
       const { name, imageUrl, altTxt, price } = productInCart;
@@ -86,96 +191,16 @@ let getCartProducts = () => {
         "background: purple"
       );
 
-      //---------------------------Création liste pproduits du panier--------------------------------//
+      cartItemsList.sort();
 
-      /*
-      Cette fonction permet 
-      //cartItemsList est la liste des produits stockés localement
-       //productDetailsListe contient la liste de TOUS les objets disponibles
-       //item est une case du tableau cartItemsList, contenant un produit ajouté au panier de type objet w/ propriétés→ id, couleur & quantité
-        //productInCart est le produit FILTRé de type Objet stocké localement AVEC les propriétés → name, imageUrl, altTxt & price
-      */
-      let article = document.createElement("article"); //<article>
-      article.classList.add("cart__item");
-      article.setAttribute("data-id", id);
-      article.setAttribute("data-color", color);
+      //---------------------------Création liste produits du panier--------------------------------//
+      addCartItemsInHTML(id, color, quantity, name, imageUrl, altTxt, price);
 
-      let divItemImage = document.createElement("div");
-      divItemImage.classList.add("cart__item__img");
-
-      let itemImage = document.createElement("img");
-      itemImage.setAttribute("src", imageUrl);
-      itemImage.setAttribute("alt", altTxt);
-
-      divItemImage.appendChild(itemImage); //<div item__img> <img/> </div>
-
-      let divItemContent = document.createElement("div"); //<div content> </div>
-      divItemContent.classList.add("cart__item__content");
-
-      let divItemDescription = document.createElement("div"); //<div description> </div>
-      divItemDescription.classList.add("cart__item__content__description");
-
-      let itemNameHeading2 = document.createElement("h2"); //<h2></h2>
-      itemNameHeading2.textContent = name;
-
-      let itemColorParagraph = document.createElement("p"); //<p color></p>
-      itemColorParagraph.textContent = "Couleur: " + color;
-
-      let itemPriceParagraph = document.createElement("p"); //<p price></p>
-      itemPriceParagraph.textContent = "Prix à l'unité: " + price + " €";
-
-      divItemDescription.appendChild(itemNameHeading2); // <div description> <h2></h2> </div>
-      divItemDescription.appendChild(itemColorParagraph); //  <div description> <h2></h2> <p color></p></div>
-      divItemDescription.appendChild(itemPriceParagraph); //  <div description> <h2></h2> <p color></p>  <p price></p> </div>
-
-      let divItemSettings = document.createElement("div"); //<div settings></div>
-      divItemSettings.classList.add("cart__item__content__settings");
-
-      let divItemQuantity = document.createElement("div"); //<div quantity></div>
-      divItemQuantity.classList.add("cart__item__content__settings__quantity");
-
-      let quantityParagraph = document.createElement("p"); // <p quantité>${quantity}</p>
-      quantityParagraph.textContent = "Qté : " + quantity;
-
-      let numberOfProductsInput = document.createElement("input");
-      numberOfProductsInput.classList.add("itemQuantity");
-      numberOfProductsInput.setAttribute("type", "number");
-      numberOfProductsInput.setAttribute("name", "itemQuantity");
-      numberOfProductsInput.setAttribute("min", "1");
-      numberOfProductsInput.setAttribute("max", "100");
-      numberOfProductsInput.setAttribute("value", quantity); //<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantity}">
-
-      divItemQuantity.appendChild(quantityParagraph); //<div quantity> <p quantité>${quantity}</p> </div>
-      divItemQuantity.appendChild(numberOfProductsInput); //<div quantity> <p quantité>${quantity}</p> <input/></div>
-
-      let divCartDeleteItems = document.createElement("div"); //<div delete></div>
-      divCartDeleteItems.classList.add("cart__item__content__settings__delete");
-
-      let deleteItemActualItemParagraph = document.createElement("p"); //<p deleteItem></p>
-      deleteItemActualItemParagraph.classList.add("deleteItem");
-      deleteItemActualItemParagraph.textContent = "Supprimer";
-      deleteItemActualItemParagraph.setAttribute("data-index", i);
-
-      divCartDeleteItems.appendChild(deleteItemActualItemParagraph); //<div delete> <p deleteItem></p> </div>
-
-      divItemSettings.appendChild(divItemQuantity);
-      divItemSettings.appendChild(divCartDeleteItems);
-
-      divItemContent.appendChild(divItemDescription);
-      divItemContent.appendChild(divItemSettings);
-
-      article.appendChild(divItemImage);
-      article.appendChild(divItemContent);
-
-      cartItemsElement.appendChild(article);
-
+      computeTotalPriceAndQuantity(price, quantity);
       //-----------------------------------------------------------//
       console.group("Logs de la suppression ou du changement");
 
-      changeItemQuantityInput = numberOfProductsInput;
-      deleteItemButton = deleteItemActualItemParagraph;
-      itemArticle = article;
-
+      //----------------------------------------------------------------------
       deleteItemButton.addEventListener("click", function () {
         let deleteButtonDataIndex = cartItemsList.findIndex(
           (index) => index.id === id && index.color === color
@@ -187,12 +212,15 @@ let getCartProducts = () => {
         let newCartList = registerProducts(cartItemsList);
         console.log(cartItemsList, deleteButtonDataIndex);
         console.log(newCartList);
-        cartItemsElement.removeChild(article);
+        cartItemsElement.removeChild(ItemArticle);
         amountOfDeletedItems++;
         totalQuantityProductValue -= quantity;
         productPrice = price * quantity;
         totalPriceProductValue -= productPrice;
-        totalQuantityItemsElement.textContent = totalQuantityProductValue;
+        totalQuantityItemsElement.textContent =
+          totalQuantityProductValue.toLocaleString(undefined, {
+            minimumFractionDigits: 0,
+          });
         totalPriceItemsElement.textContent =
           totalPriceProductValue.toLocaleString(undefined, {
             minimumFractionDigits: 0,
@@ -201,6 +229,7 @@ let getCartProducts = () => {
 
       console.log("Produit du panier" + cartItemsList);
 
+      //------------------------------------------------------------------------------
       changeItemQuantityInput.addEventListener("change", function (e) {
         let changeItemQuantityDataIndex = cartItemsList.findIndex(
           (index) => index.id === id && index.color === color
@@ -208,7 +237,6 @@ let getCartProducts = () => {
         let itemCart = cartItemsList[changeItemQuantityDataIndex];
         let newQuantity = Number(e.target.value);
         let oldQuantity = Number(itemCart.quantity);
-        //-----------------------------------------------------------
         if (newQuantity > 0) {
           let newPrice = newQuantity * price;
           let oldPrice = oldQuantity * price;
@@ -220,7 +248,10 @@ let getCartProducts = () => {
 
           totalPriceProductValue += newPrice - oldPrice;
 
-          totalQuantityItemsElement.textContent = totalQuantityProductValue;
+          totalQuantityItemsElement.textContent =
+            totalQuantityProductValue.toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+            });
 
           quantityParagraph.textContent = "Qté : " + newQuantity;
           totalPriceItemsElement.textContent =
@@ -237,17 +268,9 @@ let getCartProducts = () => {
       });
       console.groupEnd("Logs de la suppression ou du changement");
       //-----------------------------------------------------------//
-      totalQuantityProductValue += quantity;
-      productPrice = price * quantity;
-      totalPriceProductValue += productPrice;
-      totalQuantityItemsElement.textContent = totalQuantityProductValue;
-      totalPriceItemsElement.textContent =
-        totalPriceProductValue.toLocaleString(undefined, {
-          minimumFractionDigits: 0,
-        });
+      
     }
   } catch (error) {
     console.error(error);
   }
 };
-

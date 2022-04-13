@@ -9,7 +9,7 @@ let itemsSection = document.getElementById("items");
 La fonction products permet d'afficher dynamiquement les produits à notre page d'accueil
 On ajoute l'URL dans une constante
 On attend la réponse du fetch pour savoir si le statut du code est 200
-n crée la variable couchProductList qui va contenir le tableau d'objet de l'API au format JSON → Liste de nos produits
+On crée la variable couchProductList qui va contenir le tableau d'objet de l'API au format JSON → Liste de nos produits
 */
 async function products() {
   try {

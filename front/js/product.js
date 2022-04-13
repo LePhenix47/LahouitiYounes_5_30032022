@@ -21,11 +21,12 @@ let alternativeText = "";
 let productName = "";
 let productDescription = "";
 
-/*
-Cette fonction nous permet d'afficher les données/détails du produit grâce à son ID par appel d'API
-*/
 
 let productId = getParameter("id");
+
+/*
+Cette fonction nous permet d'afficher les données/détails du produit par appel d'API grâce à son ID récupéré précedemment 
+*/
 
 async function showProductDetails() {
   try {
@@ -92,15 +93,8 @@ class classProductCartDetails {
   }
 }
 
-//La faudra envoyer la commande dans le panier en le stockant avec w/ WebStorage → localStorage + preventDefault du bouton commander dans l'Event listener
-//Il doit enregistrer → L'id du canapé ainsi que: Le prix, le nom, le nombre d'articles,
-
-//Ecoute l'évènement du click sur le bouton "Ajouter au panier" et le sauvegrade localement l'objet
-
 /*
-
-!ATTENTION: Faut changer la fonction parcequ'elle ajoute le même produit
-
+Evènment qui va écouter au click du bouton "Ajouter au panier" qui va les produits dans le panier
 */
 addToCartButton.addEventListener("click", function () {
   let colorValue =   itemColors.value;

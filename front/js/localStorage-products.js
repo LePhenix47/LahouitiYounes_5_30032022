@@ -5,6 +5,7 @@ function addedToCart(productObject) {
   let listOfProducts = getProducts();
   verifyProducts(productObject, listOfProducts);
   registerProducts(listOfProducts);
+
 }
 
 //********--------------------Récupère les produits en local--------------------********//
@@ -44,10 +45,24 @@ let removeProducts = (objectToRemove) => {
 
 //********--------------------Enregistre les produits localment dans un tableau d'objet--------------------********//
 function registerProducts(listOfProducts) {
+  sortProducts(listOfProducts);
   localStorage.setItem(
     "List of products added to cart",
     JSON.stringify(listOfProducts)
   );
 }
 
+//********--------------------Range les produits par ID--------------------********//
+let sortById = (objectA, objectB) => {
+  let comparison = 0;
+  if (objectA.id < objectB.id) {
+    comparison = -1;
+  } else if (objectA.id > objectB.id) {
+    comparison = 1;
+  }
+  return comparison;
+};
 
+let sortProducts = (listOfProductsToSort) => {
+  return listOfProductsToSort.sort(sortById);
+};
