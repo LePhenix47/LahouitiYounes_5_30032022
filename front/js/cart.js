@@ -19,6 +19,7 @@ let arrayOfIds = [];
 let changeItemQuantityInput = undefined;
 let deleteItemButton = undefined;
 let itemArticle = undefined;
+let quantityOfItem = undefined;
 
 let amountOfDeletedItems = 0;
 
@@ -49,12 +50,12 @@ getProductDetails();
 
 console.groupEnd("Dans la fonction getProductDetails");
 
-let addIdsInArray = (id) => {
+function addIdsInArray(id) {
   arrayOfIds.push(id);
   console.table(arrayOfIds);
-};
+}
 
-let addCartItemsInHTML = (
+function addCartItemsInHTML(
   id,
   color,
   quantity,
@@ -62,7 +63,7 @@ let addCartItemsInHTML = (
   imageUrl,
   altTxt,
   price
-) => {
+) {
   let article = document.createElement("article"); //<article>
   article.classList.add("cart__item");
   article.setAttribute("data-id", id);
@@ -140,52 +141,11 @@ let addCartItemsInHTML = (
   changeItemQuantityInput = numberOfProductsInput;
   deleteItemButton = deleteActualItemParagraph;
   itemArticle = article;
-};
+  quantityOfItem = quantityParagraph;
+}
 
-let computeTotalPriceAndQuantity = (price, quantity) => {
-  totalQuantityProductValue += quantity;
-  productPrice = price * quantity;
-  totalPriceProductValue += productPrice;
-  totalQuantityItemsElement.textContent =
-    totalQuantityProductValue.toLocaleString(undefined, {
-      minimumFractionDigits: 0,
-    });
-  totalPriceItemsElement.textContent = totalPriceProductValue.toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 0,
-    }
-  );
-};
 
-let computeNewPriceAndQuantity = (newQuantity, oldQuantity, product) => {
-  let newPrice = newQuantity * product.price;
-  let oldPrice = oldQuantity * product.price;
 
-  totalQuantityProductValue += newQuantity - oldQuantity;
-  console.log(totalQuantityProductValue);
-
-  productPrice = product.price * quantity;
-
-  totalPriceProductValue += newPrice - oldPrice;
-
-  totalQuantityItemsElement.textContent =
-    totalQuantityProductValue.toLocaleString(undefined, {
-      minimumFractionDigits: 0,
-    });
-
-  quantityParagraph.textContent = "Qté : " + newQuantity;
-  totalPriceItemsElement.textContent = totalPriceProductValue.toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 0,
-    }
-  );
-
-  itemCart.quantity = newQuantity;
-  cartItemsList[changeItemQuantityDataIndex] = itemCart;
-  registerProducts(cartItemsList);
-};
 
 let getCartProducts = () => {
   try {
@@ -218,16 +178,15 @@ let getCartProducts = () => {
         "background: purple"
       );
 
-
       //---------------------------Création liste produits du panier--------------------------------//
       addCartItemsInHTML(id, color, quantity, name, imageUrl, altTxt, price);
 
-      computeTotalPriceAndQuantity(price, quantity);
       //-----------------------------------------------------------//
       console.group("Logs de la suppression ou du changement");
 
       //----------------------------------------------------------------------
-      deleteItemButton.addEventListener("click", function () {
+      deleteItemButton.addEventListener("click",
+       function () {
         let deleteButtonDataIndex = cartItemsList.findIndex(
           (index) => index.id === id && index.color === color
         );
@@ -238,7 +197,7 @@ let getCartProducts = () => {
         let newCartList = registerProducts(cartItemsList);
         console.log(cartItemsList, deleteButtonDataIndex);
         console.log(newCartList);
-        cartItemsElement.removeChild(ItemArticle);
+        cartItemsElement.removeChild(itemArticle);
         amountOfDeletedItems++;
         totalQuantityProductValue -= quantity;
         productPrice = price * quantity;
@@ -251,6 +210,8 @@ let getCartProducts = () => {
           totalPriceProductValue.toLocaleString(undefined, {
             minimumFractionDigits: 0,
           });
+
+        cartItemsElement.removeChild(itemArticle);
       });
 
       console.log("Produit du panier" + cartItemsList);
@@ -263,14 +224,37 @@ let getCartProducts = () => {
         let itemCart = cartItemsList[changeItemQuantityDataIndex];
         let newQuantity = Number(e.target.value);
         let oldQuantity = Number(itemCart.quantity);
+        //-----------------------------------------------------------
         if (newQuantity > 0) {
-          computeNewPriceAndQuantity(newQuantity, oldQuantity, item);
-        } else {
-          newQuantity = oldQuantity;
+          let newPrice = newQuantity * price;
+          let oldPrice = oldQuantity * price;
+          totalPriceProductValue += newPrice - oldPrice;
+
+          totalQuantityItemsElement.textContent = totalQuantityProductValue;
+          totalQuantityItemsElement.textContent =
+            totalQuantityProductValue.toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+            });
+
+          quantityOfItem.textContent = "Qté : " + newQuantity;
+          totalPriceItemsElement.textContent =
+            totalQuantityProductValue.toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+            });
         }
+        console.groupEnd("Logs de la suppression ou du changement");
+        //-----------------------------------------------------------//
       });
-      console.groupEnd("Logs de la suppression ou du changement");
-      //-----------------------------------------------------------//
+
+
+      totalQuantityProductValue += quantity;
+      productPrice = price * quantity;
+      totalPriceProductValue += productPrice;
+      totalQuantityItemsElement.textContent = totalQuantityProductValue;
+      totalPriceItemsElement.textContent =
+        totalPriceProductValue.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+        });
     }
   } catch (error) {
     console.error(error);

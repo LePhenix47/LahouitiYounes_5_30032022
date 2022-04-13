@@ -21,7 +21,11 @@ let emailElementValid = false;
 let orderButton = document.getElementById("order");
 let formFields = document.querySelectorAll(".cart__order__form input"); //tab[]
 
+<<<<<<< HEAD
 let fullNameREGEX = /^([A-ZÀ-ÖØ-Ý]{1})([a-zà-öø-ÿ]){1,20}( +)?$|^([A-ZÀ-ÖØ-Ý]){2,20}( +)?$/;
+=======
+let fullNameREGEX = /^([A-Z À-Ö Ø-Ý]{1})([a-z à-ö ø-ÿ]){1,20}( +)?$|^([A-Z a-z À-Ö Ø-Ý]+){2,20}( +)?$/;
+>>>>>>> parent of f5dc8c5 (Correction problème du REGEX avec les caractères spéciaux avec les noms + prénoms)
 
 let cityREGEX = /^([a-z A-Z \.-]+)$/;
 
