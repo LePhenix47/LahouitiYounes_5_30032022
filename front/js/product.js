@@ -21,12 +21,45 @@ let alternativeText = "";
 let productName = "";
 let productDescription = "";
 
-
 let productId = getParameter("id");
 
 /*
 Cette fonction nous permet d'afficher les données/détails du produit par appel d'API grâce à son ID récupéré précedemment 
 */
+
+let showProductDetailsinHTML = (
+  imageUrl,
+  altTxt,
+  colors,
+  name,
+  price,
+  description
+) => {
+  productPageTitle.textContent = name;
+  productName = name;
+
+  productPageDescription.setAttribute(
+    "content",
+    `Description du produit ${name}: ${description}`
+  );
+
+  itemImage.innerHTML = `
+      <img src="${imageUrl}" alt="${altTxt}">
+              `;
+  imageUrlProduct = imageUrl;
+  alternativeText = altTxt;
+  itemTitle.textContent = name;
+  itemPrice.textContent = price;
+  productPrice = price;
+
+  itemDescription.textContent = description;
+  productDescription = description;
+  for (color of colors) {
+    itemColors.innerHTML += `
+        <option value="${color}">${color}</option>
+        `;
+  }
+};
 
 async function showProductDetails() {
   try {
@@ -35,30 +68,15 @@ async function showProductDetails() {
 
     const { imageUrl, altTxt, colors, name, price, description } = couchProduct;
 
-    productPageTitle.textContent = name;
-    productName = name;
-
-    productPageDescription.setAttribute(
-      "content",
-      `Description du produit ${name}: ${description}`
+    showProductDetailsinHTML(
+      imageUrl,
+      altTxt,
+      colors,
+      name,
+      price,
+      description
     );
 
-    itemImage.innerHTML = `
-        <img src="${imageUrl}" alt="${altTxt}">
-                `;
-    imageUrlProduct = imageUrl;
-    alternativeText = altTxt;
-    itemTitle.textContent = name;
-    itemPrice.textContent = price;
-    productPrice = price;
-
-    itemDescription.textContent = description;
-    productDescription = description;
-    for (color of colors) {
-      itemColors.innerHTML += `
-          <option value="${color}">${color}</option>
-          `;
-    }
     console.log(
       imageUrlProduct +
         "\n" +
@@ -68,7 +86,6 @@ async function showProductDetails() {
         "\n" +
         productDescription
     );
-    return productId;
   } catch (error) {
     console.log(
       "%c↓ Attention erreur dans la fonction showProductDetails() de product.js " +
@@ -97,7 +114,7 @@ class classProductCartDetails {
 Evènment qui va écouter au click du bouton "Ajouter au panier" qui va les produits dans le panier
 */
 addToCartButton.addEventListener("click", function () {
-  let colorValue =   itemColors.value;
+  let colorValue = itemColors.value;
   let quantityValue = quantityProduct.value;
 
   if (quantityValue > 0 && quantityValue <= 100 && colorValue != 0) {

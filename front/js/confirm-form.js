@@ -28,6 +28,8 @@ let cityREGEX = /^([a-z A-Z \.-]+)$/;
 let emailREGEX =
   /^([a-z A-Z 0-9\.-]+)@([a-z A-Z 0-9]+).([a-z]{2,8})(.[a-z]{2,8})?$/;
 
+let whiteSpaceREGEX = /\s+/;
+
 //********--------------------Classe pour créer des objects de contact--------------------********//
 class contactInfo {
   constructor(firstName, lastName, address, city, email) {
@@ -146,11 +148,11 @@ let sendVerfiedFormInfos = () => {
   if (formIsValid) {
     console.log("%cObjet contact crée", "background: #15DEA5; color: black;");
     return new contactInfo(
-      valueFirstName,
-      valueLastName,
+      valueFirstName.replace(whiteSpaceREGEX, ''),
+      valueLastName.replace(whiteSpaceREGEX, ''),
       valueAddress,
       valueCity,
-      valueEmail
+      valueEmail.replace(whiteSpaceREGEX, '')
     );
   }
   console.error("Le formulaire n'est pas valide → Objet non crée");
@@ -174,7 +176,10 @@ let sendProductsInCartToConfirm = async () => {
     resultForm = await response.json();
     if (response.ok) {
       alert("Code statut: " + response.status + ", redirection...");
-      console.log("Résultat du formulaire: " + resultForm);
+      console.log(
+        "%cCode statut: " + response.status,
+        "background: #15DEA5; font-size: 24px;"
+      );
       window.location.href = "./confirmation.html?id=" + resultForm.orderId;
     } else {
       alert("Erreur, statut code de la réponse: " + response.status);
@@ -190,6 +195,9 @@ let sendProductsInCartToConfirm = async () => {
 
 let articlesInCart = getProducts();
 let amountOfArticlesInCart = articlesInCart.length;
+
+
+
 //   CLICK sur le bouton "Confirmer"
 orderButton.addEventListener("click", function (e) {
   e.preventDefault();

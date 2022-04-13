@@ -5,7 +5,6 @@ function addedToCart(productObject) {
   let listOfProducts = getProducts();
   verifyProducts(productObject, listOfProducts);
   registerProducts(listOfProducts);
-
 }
 
 //********--------------------Récupère les produits en local--------------------********//

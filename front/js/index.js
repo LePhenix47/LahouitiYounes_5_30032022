@@ -3,7 +3,18 @@ console.log("index.js");
 
 let itemsSection = document.getElementById("items");
 
-//
+//Affiche les détails de chaque produits
+let showProductsInHTML = (id, imageUrl, altTxt, name, description)=>{
+  itemsSection.innerHTML += ` 
+  <a href="./product.html?id=${id}">
+  <article>
+    <img src="${imageUrl}" alt="${altTxt}">
+    <h3 class="productName">${name}</h3>
+    <p class="productDescription">${description}</p>
+  </article>
+</a>
+  `;
+}
 
 /*
 La fonction products permet d'afficher dynamiquement les produits à notre page d'accueil
@@ -19,15 +30,7 @@ async function products() {
 
     for (couchProduct of couchProductsList) {
       const { _id, imageUrl, altTxt, name, description } = couchProduct;
-      itemsSection.innerHTML += ` 
-        <a href="./product.html?id=${_id}">
-        <article>
-          <img src="${imageUrl}" alt="${altTxt}">
-          <h3 class="productName">${name}</h3>
-          <p class="productDescription">${description}</p>
-        </article>
-      </a>
-        `;
+     showProductsInHTML(_id, imageUrl, altTxt, name, description);
     }
   } catch (error) {
     console.log(
