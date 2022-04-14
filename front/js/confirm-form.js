@@ -21,7 +21,8 @@ let emailElementValid = false;
 let orderButton = document.getElementById("order");
 let formFields = document.querySelectorAll(".cart__order__form input"); //tab[]
 
-let fullNameREGEX = /^([A-Z À-Ö Ø-Ý]{1})([a-z à-ö ø-ÿ]){1,20}( +)?$|^([A-Z a-z À-Ö Ø-Ý]+){2,20}( +)?$/;
+let fullNameREGEX =
+  /^([A-Z À-Ö Ø-Ý]{1})([a-z à-ö ø-ÿ]){1,20}( +)?$|^([A-Z a-z À-Ö Ø-Ý]+){2,20}( +)?$/;
 
 let cityREGEX = /^([a-z A-Z \.-]+)$/;
 
@@ -148,11 +149,11 @@ let sendVerfiedFormInfos = () => {
   if (formIsValid) {
     console.log("%cObjet contact crée", "background: #15DEA5; color: black;");
     return new contactInfo(
-      valueFirstName.replace(whiteSpaceREGEX, ''),
-      valueLastName.replace(whiteSpaceREGEX, ''),
+      valueFirstName.replace(whiteSpaceREGEX, ""),
+      valueLastName.replace(whiteSpaceREGEX, ""),
       valueAddress,
       valueCity,
-      valueEmail.replace(whiteSpaceREGEX, '')
+      valueEmail.replace(whiteSpaceREGEX, "")
     );
   }
   console.error("Le formulaire n'est pas valide → Objet non crée");
@@ -167,7 +168,7 @@ let sendProductsInCartToConfirm = async () => {
     let response = await fetch(urlProductsAPI + "order", {
       method: "POST",
       headers: {
-        "Accept" : "application/json",
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ contact: contactObject, products: arrayOfIds }),
@@ -175,7 +176,7 @@ let sendProductsInCartToConfirm = async () => {
 
     resultForm = await response.json();
     if (response.ok) {
-      alert("Code statut: " + response.status + ", redirection...");
+      alert("Formulaire envoyé, redirection vers la page de confirmation...");
       console.log(
         "%cCode statut: " + response.status,
         "background: #15DEA5; font-size: 24px;"
@@ -196,27 +197,28 @@ let sendProductsInCartToConfirm = async () => {
 let articlesInCart = getProducts();
 let amountOfArticlesInCart = articlesInCart.length;
 
-
-
 //   CLICK sur le bouton "Confirmer"
 orderButton.addEventListener("click", function (e) {
   e.preventDefault();
-  if (formIsValid() && amountOfArticlesInCart > 0 && amountOfDeletedItems < amountOfArticlesInCart) {
+  if (
+    formIsValid() &&
+    amountOfArticlesInCart > 0 &&
+    amountOfDeletedItems < amountOfArticlesInCart
+  ) {
     contactObject = sendVerfiedFormInfos();
     console.log(contactObject);
     console.log("URL: ", urlProductsAPI);
     sendProductsInCartToConfirm();
-    alert("Formulaire envoyé");
-  }
- else if (amountOfArticlesInCart <= 0 || amountOfDeletedItems >= amountOfArticlesInCart) {
+  } else if (
+    amountOfArticlesInCart <= 0 ||
+    amountOfDeletedItems >= amountOfArticlesInCart
+  ) {
     alert("Votre panier est vide, veuillez remplir votre panier");
     console.log("Non envoyé car panier vide");
-  }
-  else if (!formIsValid()) {
+  } else if (!formIsValid()) {
     alert("ATTENTION!!!! Des champs de formulaire ne sont pas valides");
     console.error("Form pas valide → champ incomplet ou incorrect");
-  }
-  else{
-    console.error("ERREUR le formulaire n'est pas valide")
+  } else {
+    console.error("ERREUR le formulaire n'est pas valide");
   }
 });

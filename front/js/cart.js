@@ -82,13 +82,6 @@ function addCartItemsInHTML(item) {
 
   //---------------------------Création liste pproduits du panier--------------------------------//
 
-  /*
-      Cette fonction permet 
-      //cartItemsList est la liste des produits stockés localement
-       //productDetailsListe contient la liste de TOUS les objets disponibles
-       //item est une case du tableau cartItemsList, contenant un produit ajouté au panier de type objet w/ propriétés→ id, couleur & quantité
-        //productInCart est le produit FILTRé de type Objet stocké localement AVEC les propriétés → name, imageUrl, altTxt & price
-      */
   let article = document.createElement("article"); //<article>
   article.classList.add("cart__item");
   article.setAttribute("data-id", id);
@@ -167,15 +160,7 @@ function addCartItemsInHTML(item) {
       minimumFractionDigits: 0,
     }
   );
-  //[element].toLocaleString(undefined, { minimumFractionDigits: 0 }) pour rendre: 23790€ → 23 790€
 }
-
-//--------------------------------------------------------------
-/*
-Fonction qui:
-1. Enlève le produit du panier ( + l'enlève dans le localStorage )
-2. Change la quantité de produit ( = Qté tot - vieille qté ds localStorage + nouvelle qté entrée dans la page)
-*/
 
 function deleteItemsFunction(item, article, price) {
   const { id, color, quantity } = item;
@@ -186,7 +171,7 @@ function deleteItemsFunction(item, article, price) {
 
   console.log("%c" + deleteButtonDataIndex, "background: green");
 
-  cartItemsList.splice(deleteButtonDataIndex, 1); //On veut effacer un seul élément qui retourne un tableau
+  cartItemsList.splice(deleteButtonDataIndex, 1);
   console.log(cartItemsList);
 
   let newCartList = registerProducts(cartItemsList);
